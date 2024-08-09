@@ -15,9 +15,12 @@ const updatePopup = () => {
                 const tableBodyColors = document.getElementById("resultBackgroundColors");
                 const tableBodyTextColors = document.getElementById("resultTextColors");
                 const tableBodySizes = document.getElementById("resultFontSizes");
+                const fontSizeHeader = document.getElementById("fontSizeHeader");
 
-                const maxColorsPerRow = 5;
+                const maxColumns = 5; // Número máximo de columnas
+                const maxRows = 2;    // Número máximo de filas
 
+                // Helper functions
                 const addColorRow = (colors, tableBody) => {
                     let rowHtml = `<tr>`;
                     colors.forEach(color => {
@@ -38,7 +41,7 @@ const updatePopup = () => {
                         colorRow.push(color);
                         colorCount++;
 
-                        if (colorCount === maxColorsPerRow) {
+                        if (colorCount === maxColumns) {
                             addColorRow(colorRow, tableBody);
                             colorRow = [];
                             colorCount = 0;
@@ -51,23 +54,36 @@ const updatePopup = () => {
                 createColorRows(bgColors, tableBodyColors);
                 createColorRows(textColors, tableBodyTextColors);
 
-                // Modificar addFontSizeRow para mostrar tamaños en rem y píxeles
-                const addFontSizeRow = (sizeString) => {
-                    const [pxSize, remSize] = sizeString.split(' ');
-                    const rowHtml = `
-                        <tr>
-                            <td>${remSize}rem | ${pxSize}</td>
-                        </tr>
-                    `;
-                    tableBodySizes.innerHTML += rowHtml;
+                // Organizar los tamaños de fuente en 5 columnas y 2 filas
+                const createFontSizeTable = (sizes, tableBody) => {
+                    const totalSizes = sizes.length;
+                    const columns = Math.min(maxColumns, totalSizes);
+                    const rows = Math.min(maxRows, Math.ceil(totalSizes / columns));
+
+                    fontSizeHeader.setAttribute('colspan', columns); // Ajustar el colspan de la cabecera
+
+                    let sizeIndex = 0;
+                    for (let row = 0; row < rows; row++) {
+                        let rowHtml = `<tr>`;
+                        for (let col = 0; col < columns; col++) {
+                            if (sizeIndex < totalSizes) {
+                                const [pxSize, remSize] = sizes[sizeIndex].split(' ');
+                                rowHtml += `<td>${remSize}rem | ${pxSize}</td>`;
+                                sizeIndex++;
+                            } else {
+                                rowHtml += `<td></td>`; // Rellenar con celdas vacías si es necesario
+                            }
+                        }
+                        rowHtml += `</tr>`;
+                        tableBody.innerHTML += rowHtml;
+                    }
                 };
 
                 // Limpiar el contenido actual de la tabla de tamaños de fuente antes de añadir nuevas filas
                 tableBodySizes.innerHTML = '';
 
-                fontSizes.forEach(size => {
-                    addFontSizeRow(size);
-                });
+                // Crear la tabla de tamaños de fuente
+                createFontSizeTable(fontSizes, tableBodySizes);
 
                 document.getElementById('results').style.display = 'block';
             }
