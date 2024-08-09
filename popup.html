@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Analyzer</title>
+    <link rel="stylesheet" href="results.css">
+</head>
+<body>
+    <div class="main">
+        <h2>Skapa Style Rules Testing - Resultados</h2>
+        <button id="analyzeButton">Analyze Page</button>
+        <div class="resultCheckUsedStyleRulesOnWeb" id="results" style="display:none;">
+            <h2>Used Background Colors (HEX)</h2>
+            <table id="bgColorsTable">
+                <thead>
+                    <tr>
+                        <th>Color</th>
+                        <th>HEX</th>
+                    </tr>
+                </thead>
+                <tbody id="resultBackgroundColors"></tbody>
+            </table>
+
+            <h2>Used Colors (HEX)</h2>
+            <table id="textColorsTable">
+                <thead>
+                    <tr>
+                        <th>Color</th>
+                        <th>HEX</th>
+                    </tr>
+                </thead>
+                <tbody id="resultTextColors"></tbody>
+            </table>
+
+            <h2>Used Font Sizes (REM)</h2>
+            <table id="fontSizesTable">
+                <thead>
+                    <tr>
+                        <th>Font Size (REM)</th>
+                    </tr>
+                </thead>
+                <tbody id="resultFontSizes"></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
