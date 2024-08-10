@@ -10,16 +10,22 @@
 		<div class="main">
 			<h2>Skapa Style Rules Testing - Results</h2>
 			<div class="analyzeContent">
-				<button id="analyzeButton" class="buttonAnalyze">
-					Analyze Page
-				</button>
+				<div class="analyzeContentSearch">
+					<span>Analyze all page <br />(Max 10 elements)</span>
+					<button id="analyzeButton" class="buttonAnalyze">
+						Analyze Page
+					</button>
+				</div>
 
 				<div class="analyzeContentSearch">
+					<label for="idSelector">
+						Enter ID to analyze element <br />and its content:
+					</label>
 					<input
 						id="idSelector"
 						class="inputAnalyze"
 						type="text"
-						placeholder="Enter ID to analyze element and its content"
+						placeholder="Enter ID"
 					/>
 					<button id="searchByIdButton" class="buttonAnalyze">
 						Analyze by ID
@@ -27,6 +33,9 @@
 				</div>
 
 				<div class="analyzeContentSearch">
+					<label for="selectorType">
+						Select a type of selector <br />and enter its value:
+					</label>
 					<select id="selectorType" class="selectorType">
 						<option value="id">ID</option>
 						<option value="class">Class</option>

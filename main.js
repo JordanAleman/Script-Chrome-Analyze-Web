@@ -20,6 +20,13 @@ const updatePopup = (selector, context) => {
         selector = '*';
     }
 
+    // Validar si el selector es válido
+    if (!isValidSelector(selector)) {
+        document.getElementById('noResults').innerText = `Invalid selector "${selector}". Please enter a valid selector!`;
+        document.getElementById('noResults').style.display = 'block';
+        return;
+    }
+
     // Determinar la acción a enviar al script de contenido
     let action = selector === '*'
         ? 'analyzePage'
@@ -152,6 +159,16 @@ const getSelector = (selectorType, selector) => {
             // Manejo de caso por defecto si es necesario
             return selector;
     }
+};
+
+// Función para validar si un selector es válido
+const isValidSelector = (selector) => {
+    try {
+        document.createDocumentFragment().querySelector(selector);
+    } catch (error) {
+        return false;
+    }
+    return true;
 };
 
 /* -------------------------------------------------------------------------- */

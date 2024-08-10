@@ -24,6 +24,10 @@ td {
 	height: 50px;
 }
 
+label {
+	font-weight: bold;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                               Analyze Content                              */
 /* -------------------------------------------------------------------------- */
@@ -46,6 +50,7 @@ td {
 #analyzeButton {
 	background-color: #0058a3;
 	color: white;
+	height: 78px;
 }
 
 #analyzeButton:hover {
@@ -71,6 +76,12 @@ td {
 	width: 30%;
 }
 
+.analyzeContent .analyzeContentSearch span {
+	margin: 0;
+	font-size: 12px;
+	font-weight: bold;
+}
+
 .inputAnalyze {
 	padding: 0.5rem;
 }
@@ -78,7 +89,7 @@ td {
 /* ----------------------------- Search Element ----------------------------- */
 .selectorType {
 	position: absolute;
-    top: 0;
+    top: 40px;
     padding: 0.6em 0;
 	width: 5rem;
 }
@@ -95,4 +106,13 @@ td {
 
 #searchButton:hover {
 	background-color: #d99e00;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 No results                                 */
+/* -------------------------------------------------------------------------- */
+
+#noResults {
+	color: red;
+	font-weight: bold;
 }
