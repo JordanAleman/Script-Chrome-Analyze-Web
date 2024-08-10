@@ -18,15 +18,14 @@ const rgbStringToArray = rgb => {
 const pxToRem = (px, base = 16) => (parseFloat(px) / base).toFixed(2) + ' rem';
 
 // Función optimizada para obtener hasta 10 colores de fondo, colores de texto y tamaños de fuente
-const analyzePageStyles = () => {
-    let allElements = document.querySelectorAll('*');
+const analyzePageStyles = (elements) => {
     let bgColors = new Set();
     let textColors = new Set();
     let fontSizes = new Set();
     const maxResults = 10;
 
-    for (let i = 0; i < allElements.length; i++) {
-        let element = allElements[i];
+    for (let i = 0; i < elements.length; i++) {
+        let element = elements[i];
         
         // Procesar colores de fondo
         if (bgColors.size < maxResults) {
@@ -77,7 +76,19 @@ const analyzePageStyles = () => {
 // Listener para recibir mensajes del popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "analyzePage") {
-        const result = analyzePageStyles();
+        const result = analyzePageStyles(document.querySelectorAll('*'));
         sendResponse(result);
     }
+
+    if (message.action === "analyzeElement") {
+        const elements = document.querySelectorAll(message.selector);
+        if (elements.length > 0) {
+            const result = analyzePageStyles(elements);
+            result.elementFound = true;
+            sendResponse(result);
+        } else {
+            sendResponse({ elementFound: false });
+        }
+    }
+    return true;
 });

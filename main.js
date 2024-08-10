@@ -1,16 +1,24 @@
-const updatePopup = () => {
-    // Limpiar los resultados actuales
-    document.getElementById("resultBackgroundColors").innerHTML = '';
-    document.getElementById("resultTextColors").innerHTML = '';
-    document.getElementById("resultFontSizes").innerHTML = '';
+const updatePopup = (selector) => {
+    cleanContent(); // Limpiar contenido previo
+
+    // Determinar la acción a enviar al script de contenido
+    const action = selector === '*' ? "analyzePage" : "analyzeElement";
 
     // Enviar mensaje al script de contenido para analizar la página
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "analyzePage" }, response => {
+        chrome.tabs.sendMessage(tabs[0].id, { action, selector }, response => {
             if (chrome.runtime.lastError) {
                 console.error('Error al recibir respuesta:', chrome.runtime.lastError.message);
             } else if (response) {
-                const { bgColors, textColors, fontSizes } = response;
+                const { bgColors, textColors, fontSizes, elementFound } = response;
+
+                if (elementFound === false) {
+                    // Mostrar mensaje si no se encuentra el elemento
+                    document.getElementById('results').style.display = 'none';
+                    document.getElementById('noResults').innerText = `Element "${selector}" not found!`;
+                    document.getElementById('noResults').style.display = 'block';
+                    return;
+                }
 
                 const tableBodyColors = document.getElementById("resultBackgroundColors");
                 const tableBodyTextColors = document.getElementById("resultTextColors");
@@ -86,9 +94,35 @@ const updatePopup = () => {
                 createFontSizeTable(fontSizes, tableBodySizes);
 
                 document.getElementById('results').style.display = 'block';
+                document.getElementById('noResults').style.display = 'none';
             }
         });
     });
 };
 
-document.getElementById('analyzeButton').addEventListener('click', updatePopup);
+const cleanContent = () => {
+    // Limpiar los resultados actuales y ocultar secciones
+    document.getElementById("resultBackgroundColors").innerHTML = '';
+    document.getElementById("resultTextColors").innerHTML = '';
+    document.getElementById("resultFontSizes").innerHTML = '';
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('noResults').style.display = 'none';
+};
+
+
+// Listener para el botón de Analyze Page
+document.getElementById('analyzeButton').addEventListener('click', () => {
+    updatePopup('*'); // Analizar toda la página
+});
+
+// Listener para el botón de Search Element
+document.getElementById('searchButton').addEventListener('click', () => {
+    cleanContent(); // Limpiar contenido previo
+    const selector = document.getElementById('elementSelector').value.trim();
+    if (selector) {
+        updatePopup(selector); // Buscar elementos basados en el selector ingresado
+    } else {
+        document.getElementById('noResults').innerText = `Please enter a valid selector!`;
+        document.getElementById('noResults').style.display = 'block';
+    }
+});

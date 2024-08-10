@@ -9,10 +9,25 @@
 	<body>
 		<div class="main">
 			<h2>Skapa Style Rules Testing - Resultados</h2>
-			<button id="analyzeButton">Analyze Page</button>
+			<div class="analyzeContent">
+				<button id="analyzeButton" class="buttonAnalyze">
+					Analyze Page
+				</button>
+				<div class="analyzeContentSearch">
+					<input
+						id="elementSelector"
+						class="inputAnalyze"
+						type="text"
+						placeholder="Enter ID, class, tag, etc."
+					/>
+					<button id="searchButton" class="buttonAnalyze">
+						Search Element
+					</button>
+				</div>
+			</div>
 			<div
-				class="resultCheckUsedStyleRulesOnWeb"
 				id="results"
+				class="resultCheckUsedStyleRulesOnWeb"
 				style="display: none"
 			>
 				<h2>Used Background Colors (HEX)</h2>
@@ -49,6 +64,7 @@
 					<tbody id="resultFontSizes"></tbody>
 				</table>
 			</div>
+			<div id="noResults" style="display: none">Element not found!</div>
 		</div>
 		<script src="main.js"></script>
 	</body>
