@@ -30,17 +30,22 @@ td {
 .analyzeContent {
 	display: flex;
 	justify-content: space-between;
+	align-items: flex-end;
 	margin-bottom: 1.5rem;
-	height: 100%;
 }
 
-#analyzeButton {
+.buttonAnalyze {
 	cursor: pointer;
-	background-color: #0058a3;
-	color: white;
 	padding: 0.5rem 2rem;
 	border-radius: 5px;
 	font-weight: bold;
+	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+		border-color 0.15s ease-in-out;
+}
+
+#analyzeButton {
+	background-color: #0058a3;
+	color: white;
 }
 
 #analyzeButton:hover {
@@ -48,16 +53,22 @@ td {
 }
 
 #searchButton {
-	cursor: pointer;
 	background-color: #ffda1a;
 	color: black;
-	padding: 0.5rem 2rem;
-	border-radius: 5px;
 	border-color: #ffda1a;
-	font-weight: bold;
 }
 
 #searchButton:hover {
+	background-color: #d99e00;
+}
+
+#searchByIdButton {
+	background-color: #ffda1a;
+	color: black;
+	border-color: #ffda1a;
+}
+
+#searchByIdButton:hover {
 	background-color: #d99e00;
 }
 
@@ -66,14 +77,8 @@ td {
 	flex-direction: column;
 	row-gap: 0.5rem;
 	justify-content: flex-end;
-	height: 50px;
-}
-
-.buttonAnalyze {
-	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-		border-color 0.15s ease-in-out;
 }
 
 .inputAnalyze {
-	padding: .5rem;
+	padding: 0.5rem;
 }

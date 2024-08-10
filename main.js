@@ -1,14 +1,24 @@
-const updatePopup = (selector) => {
+const updatePopup = (selector, searchById = false) => {
     cleanContent(); // Limpiar contenido previo
 
+    // Si estamos buscando por ID, asegurarnos de que comience con '#'
+    if (searchById && !selector.startsWith('#')) {
+        selector = `#${selector}`;
+    }
+
     // Determinar la acción a enviar al script de contenido
-    const action = selector === '*' ? "analyzePage" : "analyzeElement";
+    let action = selector === '*'
+        ? 'analyzePage'
+        : (searchById
+            ? 'analyzeElementAndChildren'
+            : 'analyzeElement');
+
 
     // Enviar mensaje al script de contenido para analizar la página
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
         chrome.tabs.sendMessage(tabs[0].id, { action, selector }, response => {
             if (chrome.runtime.lastError) {
-                console.error('Error al recibir respuesta:', chrome.runtime.lastError.message);
+                console.error('Error al recibir respuesta (っ °Д °;)っ:', chrome.runtime.lastError.message);
             } else if (response) {
                 const { bgColors, textColors, fontSizes, elementFound } = response;
 
@@ -115,6 +125,18 @@ document.getElementById('analyzeButton').addEventListener('click', () => {
     updatePopup('*'); // Analizar toda la página
 });
 
+// Listener para el botón de Search by ID
+document.getElementById('searchByIdButton').addEventListener('click', () => {
+    cleanContent(); // Limpiar contenido previo
+    const id = document.getElementById('idSelector').value.trim();
+    if (id) {
+        updatePopup(id, true); // Buscar y analizar el elemento por ID y sus hijos
+    } else {
+        document.getElementById('noResults').innerText = `Please enter a valid ID!`;
+        document.getElementById('noResults').style.display = 'block';
+    }
+});
+
 // Listener para el botón de Search Element
 document.getElementById('searchButton').addEventListener('click', () => {
     cleanContent(); // Limpiar contenido previo
@@ -124,5 +146,21 @@ document.getElementById('searchButton').addEventListener('click', () => {
     } else {
         document.getElementById('noResults').innerText = `Please enter a valid selector!`;
         document.getElementById('noResults').style.display = 'block';
+    }
+});
+
+// Listener para detectar "Enter" en el campo de búsqueda por ID
+document.getElementById('idSelector').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevenir la acción por defecto del Enter (como enviar formularios)
+        document.getElementById('searchByIdButton').click();
+    }
+});
+
+// Listener para detectar "Enter" en el campo de búsqueda por selector general
+document.getElementById('elementSelector').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        document.getElementById('searchButton').click();
     }
 });

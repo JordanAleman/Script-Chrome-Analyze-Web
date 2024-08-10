@@ -80,6 +80,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse(result);
     }
 
+    if (message.action === "analyzeElementAndChildren") {
+        const element = document.querySelector(message.selector);
+        if (element) {
+            const elements = element.querySelectorAll('*');
+            const allElements = [element, ...elements]; // Incluir el elemento en sí y todos sus hijos
+            const result = analyzePageStyles(allElements);
+            result.elementFound = true;
+            sendResponse(result);
+        } else {
+            sendResponse({ elementFound: false });
+        }
+    }
+    
     if (message.action === "analyzeElement") {
         const elements = document.querySelectorAll(message.selector);
         if (elements.length > 0) {
@@ -90,5 +103,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             sendResponse({ elementFound: false });
         }
     }
+
+
+    
     return true;
 });
