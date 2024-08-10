@@ -113,6 +113,24 @@ label {
 /* -------------------------------------------------------------------------- */
 
 #noResults {
-	color: red;
+	display: flex;
+	align-items: center;
+	padding: 1rem;
+	margin-bottom: 1rem;
+	border: 1px solid #f5c6cb;
+	border-radius: .25rem;
+	background-color: #f8d7da;
+	color: #721c24;
 	font-weight: bold;
-}
+	font-size: 1rem;
+  }
+  
+  #noResults::before {
+	content: '⚠️';
+	font-size: 1.5rem;
+	margin-right: 0.75rem;
+  }
+  
+  #noResults {
+	display: none; 
+  }
