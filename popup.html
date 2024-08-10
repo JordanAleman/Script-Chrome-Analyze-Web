@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		<div class="main">
-			<h2>Skapa Style Rules Testing - Resultados</h2>
+			<h2>Skapa Style Rules Testing - Results</h2>
 			<div class="analyzeContent">
 				<button id="analyzeButton" class="buttonAnalyze">
 					Analyze Page
@@ -27,11 +27,18 @@
 				</div>
 
 				<div class="analyzeContentSearch">
+					<select id="selectorType" class="selectorType">
+						<option value="id">ID</option>
+						<option value="class">Class</option>
+						<option value="name">Name</option>
+						<option value="tag">Tag</option>
+						<option value="custom">Custom</option>
+					</select>
 					<input
 						id="elementSelector"
 						class="inputAnalyze"
 						type="text"
-						placeholder="Enter ID, class, tag, etc."
+						placeholder="Enter selector"
 					/>
 					<button id="searchButton" class="buttonAnalyze">
 						Search Element

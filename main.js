@@ -1,18 +1,31 @@
-const updatePopup = (selector, searchById = false) => {
+/* -------------------------------------------------------------------------- */
+/*                            Funciones principales                           */
+/* -------------------------------------------------------------------------- */
+const updatePopup = (selector, context) => {
     cleanContent(); // Limpiar contenido previo
 
-    // Si estamos buscando por ID, asegurarnos de que comience con '#'
-    if (searchById && !selector.startsWith('#')) {
-        selector = `#${selector}`;
+    const selectorType = document.getElementById('selectorType').value; // Obtener el tipo de selector seleccionado
+
+    // Ajustar el selector basado en el contexto
+    if (context === 'searchById') {
+        // Para búsqueda por ID, asegurar que el selector es un ID y comienza con '#'
+        if (!selector.startsWith('#')) {
+            selector = `#${selector}`;
+        }
+    } else if (context === 'searchElement') {
+        // Para búsqueda general de elementos, aplicar `getSelector`
+        selector = getSelector(selectorType, selector);
+    } else if (context === 'analyzePage') {
+        // Para analizar la página, el selector siempre es '*'
+        selector = '*';
     }
 
     // Determinar la acción a enviar al script de contenido
     let action = selector === '*'
         ? 'analyzePage'
-        : (searchById
+        : (context === 'searchById'
             ? 'analyzeElementAndChildren'
             : 'analyzeElement');
-
 
     // Enviar mensaje al script de contenido para analizar la página
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
@@ -110,6 +123,9 @@ const updatePopup = (selector, searchById = false) => {
     });
 };
 
+/* -------------------------------------------------------------------------- */
+/*                            Funciones auxiliares                            */
+/* -------------------------------------------------------------------------- */
 const cleanContent = () => {
     // Limpiar los resultados actuales y ocultar secciones
     document.getElementById("resultBackgroundColors").innerHTML = '';
@@ -119,10 +135,31 @@ const cleanContent = () => {
     document.getElementById('noResults').style.display = 'none';
 };
 
+const getSelector = (selectorType, selector) => {
+    switch (selectorType.toLowerCase()) {
+        case 'custom':
+            // No añadir prefijo para 'custom'
+            return selector;
+        case 'id':
+            return `#${selector}`;
+        case 'class':
+            return `.${selector}`;
+        case 'name':
+            return `[name="${selector}"]`;
+        case 'tag':
+            return `${selector}`;
+        default:
+            // Manejo de caso por defecto si es necesario
+            return selector;
+    }
+};
 
+/* -------------------------------------------------------------------------- */
+/*                       Construcción de los resultados                       */
+/* -------------------------------------------------------------------------- */
 // Listener para el botón de Analyze Page
 document.getElementById('analyzeButton').addEventListener('click', () => {
-    updatePopup('*'); // Analizar toda la página
+    updatePopup('*', 'analyzePage'); // Analizar toda la página
 });
 
 // Listener para el botón de Search by ID
@@ -130,7 +167,7 @@ document.getElementById('searchByIdButton').addEventListener('click', () => {
     cleanContent(); // Limpiar contenido previo
     const id = document.getElementById('idSelector').value.trim();
     if (id) {
-        updatePopup(id, true); // Buscar y analizar el elemento por ID y sus hijos
+        updatePopup(id, 'searchById'); // Buscar y analizar el elemento por ID y sus hijos
     } else {
         document.getElementById('noResults').innerText = `Please enter a valid ID!`;
         document.getElementById('noResults').style.display = 'block';
@@ -142,13 +179,16 @@ document.getElementById('searchButton').addEventListener('click', () => {
     cleanContent(); // Limpiar contenido previo
     const selector = document.getElementById('elementSelector').value.trim();
     if (selector) {
-        updatePopup(selector); // Buscar elementos basados en el selector ingresado
+        updatePopup(selector, 'searchElement'); // Buscar elementos basados en el selector ingresado
     } else {
         document.getElementById('noResults').innerText = `Please enter a valid selector!`;
         document.getElementById('noResults').style.display = 'block';
     }
 });
 
+/* -------------------------------------------------------------------------- */
+/*                             Eventos de teclado                             */
+/* -------------------------------------------------------------------------- */
 // Listener para detectar "Enter" en el campo de búsqueda por ID
 document.getElementById('idSelector').addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {

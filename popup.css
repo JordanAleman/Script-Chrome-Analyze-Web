@@ -52,16 +52,6 @@ td {
 	background-color: #004f93;
 }
 
-#searchButton {
-	background-color: #ffda1a;
-	color: black;
-	border-color: #ffda1a;
-}
-
-#searchButton:hover {
-	background-color: #d99e00;
-}
-
 #searchByIdButton {
 	background-color: #ffda1a;
 	color: black;
@@ -73,12 +63,36 @@ td {
 }
 
 .analyzeContent .analyzeContentSearch {
+	position: relative;
 	display: flex;
 	flex-direction: column;
-	row-gap: 0.5rem;
 	justify-content: flex-end;
+	row-gap: 0.5rem;
+	width: 30%;
 }
 
 .inputAnalyze {
 	padding: 0.5rem;
+}
+
+/* ----------------------------- Search Element ----------------------------- */
+.selectorType {
+	position: absolute;
+    top: 0;
+    padding: 0.6em 0;
+	width: 5rem;
+}
+
+#elementSelector {
+	padding-left: 5.5rem;
+}
+
+#searchButton {
+	background-color: #ffda1a;
+	color: black;
+	border-color: #ffda1a;
+}
+
+#searchButton:hover {
+	background-color: #d99e00;
 }
