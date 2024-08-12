@@ -1,12 +1,17 @@
 // src/modules/domUtils.js
 
 export const cleanContent = () => {
-    document.getElementById("resultBackgroundColors").innerHTML = '';
-    document.getElementById("resultTextColors").innerHTML = '';
-    document.getElementById("resultFontSizes").innerHTML = '';
+    // Limpiar todo el contenido de cada tbody dentro de la sección de resultados
+    const resultTables = document.querySelectorAll("#results tbody");
+    resultTables.forEach(tbody => {
+        tbody.innerHTML = '';
+    });
+
+    // Ocultar la sección de resultados y el mensaje de "no results"
     document.getElementById('results').style.display = 'none';
     document.getElementById('noResults').style.display = 'none';
 };
+
 
 export const getSelector = (selectorType, selector) => {
     switch (selectorType.toLowerCase()) {

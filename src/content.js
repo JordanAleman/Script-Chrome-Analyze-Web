@@ -7,7 +7,7 @@ const analyzePageStyles = (elements) => {
     let bgColors = new Set();
     let textColors = new Set();
     let fontSizes = new Set();
-    const maxResults = 10;
+    const maxResults = 100;
 
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
