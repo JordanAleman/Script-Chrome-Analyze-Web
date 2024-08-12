@@ -197,23 +197,30 @@ input:checked + .slider:before {
     padding: 1rem 0;
 }
 
-.accordion-item {
-    margin-bottom: 0.5rem;
-}
-
-.accordion-header {
-    background-color: #007bff;
+.accordion {
+    background-color: #0a6abd;
     color: white;
+	border-color: transparent;
     cursor: pointer;
     padding: 0.5rem;
+	width: 100%;
     font-weight: bold;
+	text-align: start;
+    transition: background-color 0.4s, color 0.4s;
 }
 
-.accordion-content {
-    background-color: #f1f1f1;
-    padding: 0.5rem;
-    display: none;
+.accordion.active, .accordion:hover {
+    background-color: #064f8e;
 }
+
+.panel {
+    padding: 0 1rem;
+    background-color: #f1f1f1;
+    max-height: 0; 
+    overflow: hidden;
+    transition: max-height 0.4s ease-out; 
+}
+
 
 
 /* -------------------------------------------------------------------------- */

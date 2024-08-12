@@ -82,29 +82,39 @@ export const createAccordionContent = (bgColors, textColors, fontSizes) => {
     accordionContainer.innerHTML = ''; // Limpiar contenido existente
 
     const createAccordionItem = (title, items) => {
-        const item = document.createElement('div');
-        item.classList.add('accordion-item');
-        
-        const header = document.createElement('div');
-        header.classList.add('accordion-header');
-        header.textContent = title;
-        header.addEventListener('click', () => {
-            content.style.display = content.style.display === 'block' ? 'none' : 'block';
-        });
-        
-        const content = document.createElement('div');
-        content.classList.add('accordion-content');
-        content.style.display = 'block'
-        content.innerHTML = items.map(item => `<div>${item}</div>`).join('');
-        
-        item.appendChild(header);
-        item.appendChild(content);
-        accordionContainer.appendChild(item);
+        const itemHtml = `
+            <div class="accordion-item">
+                <button class="accordion">${title}</button>
+                <div class="panel">
+                    <ul class="panelContent">
+                        ${items.map(i => `<li>${i}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+        `;
+        accordionContainer.innerHTML += itemHtml;
     };
 
     createAccordionItem('Background Colors', bgColors);
     createAccordionItem('Text Colors', textColors);
     createAccordionItem('Font Sizes', fontSizes);
+
+    // Ejecutar la funcionalidad del acordeón
+    requestAnimationFrame(() => {
+        document.querySelectorAll('.accordion').forEach(header => {
+            const panel = header.nextElementSibling;
+            // Inicialmente, establece max-height para que esté desplegado
+            panel.style.maxHeight = panel.scrollHeight + "px";
+
+            header.addEventListener('click', () => {
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        });
+    });
 
     accordionContainer.style.display = 'block';
 };

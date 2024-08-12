@@ -53,11 +53,15 @@ export const updatePopup = (selector, context) => {
         return;
     }
 
-    const action = selector === '*'
-        ? 'analyzePage'
-        : (context === 'searchById'
-            ? 'analyzeElementAndChildren'
-            : 'analyzeElement');
+    let action;
+
+    if (selector === '*') {
+        action = 'analyzePage';
+    } else {
+        const isSearchById = context === 'searchById';
+        action = isSearchById ? 'analyzeElementAndChildren' : 'analyzeElement';
+    }
+
 
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
         chrome.tabs.sendMessage(tabs[0].id, { action, selector }, response => {
