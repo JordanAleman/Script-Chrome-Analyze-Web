@@ -1,8 +1,7 @@
-// Función auxiliar para convertir RGB a HEX
-const rgbArrayToHex = rgb => `#${rgb.map(v => v.toString(16).padStart(2, '0')).join('')}`;
+// utils.js
+export const rgbArrayToHex = rgb => `#${rgb.map(v => v.toString(16).padStart(2, '0')).join('')}`;
 
-// Función auxiliar para convertir un string RGB a array de valores
-const rgbStringToArray = rgb => {
+export const rgbStringToArray = rgb => {
     if (typeof rgb !== 'string') {
         return null; // Si no es una cadena, devolver null
     }
@@ -13,5 +12,4 @@ const rgbStringToArray = rgb => {
     return match.slice(1, 4).map(v => Number(v)); // Extraer y convertir los valores a números
 };
 
-// Función auxiliar para convertir píxeles a rem
-const pxToRem = (px, base = 16) => (parseFloat(px) / base).toFixed(2) + 'rem';
+export const pxToRem = (px, base = 16) => (parseFloat(px) / base).toFixed(2) + ' rem';

@@ -1,21 +1,6 @@
-// Función auxiliar para convertir RGB a HEX
-const rgbArrayToHex = rgb => `#${rgb.map(v => v.toString(16).padStart(2, '0')).join('')}`;
-
-// Función auxiliar para convertir un string RGB a array de valores
-const rgbStringToArray = rgb => {
-    if (typeof rgb !== 'string') {
-        return null; // Si no es una cadena, devolver null
-    }
-    const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-    if (!match) {
-        return null; // Si no coincide con el formato RGB, devolver null
-    }
-    return match.slice(1, 4).map(v => Number(v)); // Extraer y convertir los valores a números
-};
-
-
-// Función auxiliar para convertir píxeles a rem
-const pxToRem = (px, base = 16) => (parseFloat(px) / base).toFixed(2) + ' rem';
+import { processBackgroundColor } from '../components/bgColor.js';
+import { processTextColor } from '../components/color.js';
+import { processFontSize } from '../components/fontSize.js';
 
 // Función optimizada para obtener hasta 10 colores de fondo, colores de texto y tamaños de fuente
 const analyzePageStyles = (elements) => {
@@ -26,37 +11,28 @@ const analyzePageStyles = (elements) => {
 
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
-        
+
         // Procesar colores de fondo
         if (bgColors.size < maxResults) {
-            let bgColor = window.getComputedStyle(element).backgroundColor;
-            if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
-                let rgbArray = rgbStringToArray(bgColor);
-                if (rgbArray) { // Verifica que rgbArray no sea null
-                    let hexColor = rgbArrayToHex(rgbArray);
-                    bgColors.add(hexColor);
-                }
+            let hexColor = processBackgroundColor(element);
+            if (hexColor) {
+                bgColors.add(hexColor);
             }
         }
 
         // Procesar colores de texto
         if (textColors.size < maxResults) {
-            let color = window.getComputedStyle(element).color;
-            if (color && color !== 'rgba(0, 0, 0, 0)' && color !== 'transparent') {
-                let rgbArray = rgbStringToArray(color);
-                if (rgbArray) { // Verifica que rgbArray no sea null
-                    let hexColor = rgbArrayToHex(rgbArray);
-                    textColors.add(hexColor);
-                }
+            let hexColor = processTextColor(element);
+            if (hexColor) {
+                textColors.add(hexColor);
             }
         }
 
         // Procesar tamaños de fuente
         if (fontSizes.size < maxResults) {
-            let fontSize = window.getComputedStyle(element).fontSize;
-            if (fontSize && fontSize !== '0px') {
-                let remSize = pxToRem(fontSize);
-                fontSizes.add(`${fontSize} ${remSize}`);
+            let size = processFontSize(element);
+            if (size) {
+                fontSizes.add(size);
             }
         }
 
@@ -92,7 +68,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             sendResponse({ elementFound: false });
         }
     }
-    
+
     if (message.action === "analyzeElement") {
         const elements = document.querySelectorAll(message.selector);
         if (elements.length > 0) {
@@ -105,6 +81,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
 
-    
+
     return true;
 });

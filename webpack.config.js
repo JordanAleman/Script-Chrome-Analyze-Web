@@ -1,21 +1,16 @@
 const path = require('path');
 
 module.exports = {
-    mode: 'production',
     entry: {
-        main: './src/main.js',
         content: './src/content.js',
+        main: './src/main.js',
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
         filename: '[name].bundle.js',
+        path: path.resolve(__dirname, 'dist'),
     },
     module: {
         rules: [
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader'],
-            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
@@ -27,5 +22,8 @@ module.exports = {
                 },
             },
         ],
+    },
+    optimization: {
+        minimize: true,
     },
 };
