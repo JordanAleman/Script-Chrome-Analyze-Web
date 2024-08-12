@@ -7,13 +7,13 @@
         "activeTab"
     ],
     "action": {
-        "default_popup": "popup.html",
+        "default_popup": "src/popup.html",
         "default_title": "Style Analyzer"
     },
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["content.js"]
+            "js": ["dist/content.bundle.js"]
         }
     ]
 }
