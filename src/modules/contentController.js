@@ -3,6 +3,36 @@
 import * as domUtils from './domUtils.js';
 import * as uiUpdater from './uiUpdater.js';
 
+let cachedResults = null;
+
+const toggleViewButton = document.querySelector('.switch input');
+
+const toggleView = () => {
+    const isAccordionView = toggleViewButton.checked;
+
+    if (cachedResults) {
+        if (isAccordionView) {
+            uiUpdater.createAccordionContent(
+                cachedResults.bgColors,
+                cachedResults.textColors,
+                cachedResults.fontSizes
+            );
+        } else {
+            const tableBodyColors = document.getElementById("resultBackgroundColors");
+            const tableBodyTextColors = document.getElementById("resultTextColors");
+            const tableBodySizes = document.getElementById("resultFontSizes");
+
+            uiUpdater.createColorRows(cachedResults.bgColors, tableBodyColors);
+            uiUpdater.createColorRows(cachedResults.textColors, tableBodyTextColors);
+            uiUpdater.createTable(cachedResults.fontSizes, tableBodySizes, "fontSizeHeader");
+        }
+
+        uiUpdater.showResults();
+    }
+};
+
+toggleViewButton.addEventListener('change', toggleView);
+
 export const updatePopup = (selector, context) => {
     domUtils.cleanContent();
 
@@ -38,18 +68,12 @@ export const updatePopup = (selector, context) => {
 
                 if (elementFound === false) {
                     uiUpdater.showNoResultsMessage(`Element "${selector}" not found!`);
-                    return;
+                } else {
+                    // Guardar resultados en caché
+                    cachedResults = { bgColors, textColors, fontSizes };
+
+                    toggleView(); // Actualizar vista actual (ya sea tabla o acordeón)
                 }
-
-                const tableBodyColors = document.getElementById("resultBackgroundColors");
-                const tableBodyTextColors = document.getElementById("resultTextColors");
-                const tableBodySizes = document.getElementById("resultFontSizes");
-
-                uiUpdater.createColorRows(bgColors, tableBodyColors);
-                uiUpdater.createColorRows(textColors, tableBodyTextColors);
-                uiUpdater.createTable(fontSizes, tableBodySizes, "fontSizeHeader");
-
-                uiUpdater.showResults();
             }
         });
     });

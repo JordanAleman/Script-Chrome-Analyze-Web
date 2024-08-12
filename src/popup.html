@@ -64,11 +64,12 @@
 					</button>
 				</div>
 			</div>
-			<div
-				id="results"
-				class="resultCheckUsedStyleRulesOnWeb"
-				style="display: none"
-			>
+
+			<div id="accordionResults" class="accordion-results">
+				<!-- Contenido dinámico para el acordeón se inyectará aquí -->
+			</div>
+
+			<div id="results" class="resultCheckUsedStyleRulesOnWeb">
 				<h2>Used Background Colors (HEX)</h2>
 				<table id="bgColorsTable">
 					<thead>
@@ -103,6 +104,7 @@
 					<tbody id="resultFontSizes"></tbody>
 				</table>
 			</div>
+
 			<div id="noResults">Element not found!</div>
 		</main>
 		<script src="../dist/main.bundle.js"></script>

@@ -1,3 +1,5 @@
+// src/content.js
+
 import { processBackgroundColor } from '../components/bgColor.js';
 import { processTextColor } from '../components/color.js';
 import { processFontSize } from '../components/fontSize.js';
