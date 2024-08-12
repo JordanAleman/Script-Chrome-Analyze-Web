@@ -1,7 +1,6 @@
 // src/modules/domUtils.js
 
 export const cleanContent = () => {
-    // Limpiar todo el contenido de cada tbody dentro de la sección de resultados
     const resultTables = document.querySelectorAll("#results tbody");
     resultTables.forEach(tbody => {
         tbody.innerHTML = '';

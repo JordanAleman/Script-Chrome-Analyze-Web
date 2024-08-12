@@ -76,7 +76,7 @@ export const updatePopup = (selector, context) => {
                     // Guardar resultados en caché
                     cachedResults = { bgColors, textColors, fontSizes };
 
-                    toggleView(); // Actualizar vista actual (ya sea tabla o acordeón)
+                    toggleView();
                 }
             }
         });

@@ -1,3 +1,8 @@
+body {
+	height: 100vh;
+    overflow-y: scroll;
+}
+
 .header {
 	display: flex;
     justify-content: space-between;
@@ -228,7 +233,7 @@ input:checked + .slider:before {
 /* -------------------------------------------------------------------------- */
 
 #noResults {
-	display: flex;
+	display: none;
 	align-items: center;
 	padding: 1rem;
 	margin-bottom: 1rem;
@@ -244,10 +249,6 @@ input:checked + .slider:before {
 	content: "⚠️";
 	font-size: 1.5rem;
 	margin-right: 0.75rem;
-}
-
-#noResults {
-	display: none;
 }
 
 /* -------------------------------------------------------------------------- */

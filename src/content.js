@@ -4,39 +4,45 @@ import { processBackgroundColor } from '../components/bgColor.js';
 import { processTextColor } from '../components/color.js';
 import { processFontSize } from '../components/fontSize.js';
 
+// Función auxiliar para procesar los estilos de un solo elemento
+const processElementStyles = (element, sets, maxResults) => {
+    const [bgColors, textColors, fontSizes] = sets;
+
+    // Procesar colores de fondo
+    if (bgColors.size < maxResults) {
+        let hexColor = processBackgroundColor(element);
+        if (hexColor) {
+            bgColors.add(hexColor);
+        }
+    }
+
+    // Procesar colores de texto
+    if (textColors.size < maxResults) {
+        let hexColor = processTextColor(element);
+        if (hexColor) {
+            textColors.add(hexColor);
+        }
+    }
+
+    // Procesar tamaños de fuente
+    if (fontSizes.size < maxResults) {
+        let size = processFontSize(element);
+        if (size) {
+            fontSizes.add(size);
+        }
+    }
+};
+
 // Función optimizada para obtener hasta 10 colores de fondo, colores de texto y tamaños de fuente
 const analyzePageStyles = (elements) => {
     let bgColors = new Set();
     let textColors = new Set();
     let fontSizes = new Set();
     const maxResults = 100;
+    const sets = [bgColors, textColors, fontSizes];
 
-    for (let i = 0; i < elements.length; i++) {
-        let element = elements[i];
-
-        // Procesar colores de fondo
-        if (bgColors.size < maxResults) {
-            let hexColor = processBackgroundColor(element);
-            if (hexColor) {
-                bgColors.add(hexColor);
-            }
-        }
-
-        // Procesar colores de texto
-        if (textColors.size < maxResults) {
-            let hexColor = processTextColor(element);
-            if (hexColor) {
-                textColors.add(hexColor);
-            }
-        }
-
-        // Procesar tamaños de fuente
-        if (fontSizes.size < maxResults) {
-            let size = processFontSize(element);
-            if (size) {
-                fontSizes.add(size);
-            }
-        }
+    for (const element of elements) {
+        processElementStyles(element, sets, maxResults);
 
         // Si ya tenemos el número máximo de resultados en todas las categorías, salimos del bucle
         if (bgColors.size >= maxResults && textColors.size >= maxResults && fontSizes.size >= maxResults) {
@@ -81,8 +87,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             sendResponse({ elementFound: false });
         }
     }
-
-
 
     return true;
 });

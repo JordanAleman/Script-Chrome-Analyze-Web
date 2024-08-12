@@ -35,6 +35,9 @@ const addColorRow = (colors, tableBody) => {
 };
 
 export const createColorRows = (colors, tableBody, maxColumns = 5) => {
+    // Limpia el contenido existente en la tabla antes de agregar nuevas filas
+    tableBody.innerHTML = '';
+    
     let colorRow = [];
     let colorCount = 0;
 
@@ -61,6 +64,7 @@ export const createTable = (items, tableBody, headerId, maxColumns = 5, maxRows 
     tableHeader.setAttribute('colspan', columns);
 
     let itemIndex = 0;
+    let rowsHtml = '';
     for (let row = 0; row < rows; row++) {
         let rowHtml = `<tr>`;
         for (let col = 0; col < columns; col++) {
@@ -73,8 +77,9 @@ export const createTable = (items, tableBody, headerId, maxColumns = 5, maxRows 
             }
         }
         rowHtml += `</tr>`;
-        tableBody.innerHTML += rowHtml;
+        rowsHtml += rowHtml;
     }
+    tableBody.innerHTML = rowsHtml; // Limpia y añade todas las filas a la vez
 };
 
 export const createAccordionContent = (bgColors, textColors, fontSizes) => {
