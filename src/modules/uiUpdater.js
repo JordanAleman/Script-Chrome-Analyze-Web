@@ -1,4 +1,5 @@
 // src/modules/uiUpdater.js
+import colorsJson from '../assets/skapa.json';
 
 // Mostrar el mensaje de "Sin Resultados" y ocultar el contenido
 export const showNoResultsMessage = (message) => {
@@ -24,39 +25,66 @@ export const showResults = () => {
     document.getElementById('noResults').style.display = 'none'; // Ocultar mensaje de sin resultados
 };
 
-// Función para añadir filas de colores a la tabla
-const addColorRow = (colors, tableBody) => {
-    let rowHtml = `<tr>`;
-    colors.forEach(color => {
-        rowHtml += `
-            <td class="color-box" style="background-color: ${color};"></td>
-            <td>${color}</td>
-        `;
-    });
-    rowHtml += `</tr>`;
-    tableBody.innerHTML += rowHtml;
-};
-
-// Función para crear filas de colores en la tabla
-export const createColorRows = (colors, tableBody, maxColumns = 5) => {
+export const createColorRows = (colors, tableBody, maxColumns = 3) => {
     // Limpia el contenido existente en la tabla antes de agregar nuevas filas
     tableBody.innerHTML = '';
 
-    let colorRow = [];
-    let colorCount = 0;
+    const matchedColors = [];
+    const unmatchedColors = [];
 
+    // Separar los colores en coincidentes y no coincidentes
     colors.forEach(color => {
-        colorRow.push(color);
-        colorCount++;
-
-        if (colorCount === maxColumns) {
-            addColorRow(colorRow, tableBody);
-            colorRow = [];
-            colorCount = 0;
+        const match = Object.entries(colorsJson.colors).find(([name, value]) => value.toLowerCase() === color.toLowerCase());
+        if (match) {
+            matchedColors.push({ color, name: match[0] });
+        } else {
+            unmatchedColors.push({ color });
         }
     });
 
-    if (colorRow.length > 0) addColorRow(colorRow, tableBody);
+    const addColorRow = (colors, isMatched) => {
+        let rowHtml = `<tr>`;
+        colors.forEach(item => {
+            const matchName = item.name ? item.name : '<span style="color:red;">X</span>';
+            const cellStyle = isMatched ? 'class="tableSuccess"' : '';
+            rowHtml += `
+                <td class="color-box" style="background-color: ${item.color};"></td>
+                <td>${item.color}</td>
+                <td ${cellStyle}>${matchName}</td>
+            `;
+        });
+        rowHtml += `</tr>`;
+        tableBody.innerHTML += rowHtml;
+    };
+
+    const fillTable = (colorList, isMatched) => {
+        let colorRow = [];
+        let colorCount = 0;
+    
+        colorList.forEach(item => {
+            colorRow.push(item);
+            colorCount++;
+    
+            if (colorCount === maxColumns) {
+                addColorRow(colorRow, isMatched);
+                colorRow = [];
+                colorCount = 0;
+            }
+        });
+    
+        if (colorRow.length > 0) addColorRow(colorRow, isMatched);
+    };
+
+    // Crear tabla para colores coincidentes
+    fillTable(matchedColors, true);
+
+    // Añadir un margen entre tablas
+    if (unmatchedColors.length > 0) {
+        tableBody.innerHTML += `<tr><td class="tableSeparator" colspan="${maxColumns * 3}">.·´¯\`(&gt;▂&lt;)´¯\`·.</td></tr>`;
+    }
+
+    // Crear tabla para colores no coincidentes
+    fillTable(unmatchedColors, false);
 };
 
 // Función para crear la tabla con elementos

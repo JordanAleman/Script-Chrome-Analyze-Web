@@ -1,5 +1,5 @@
 // color.js
-import { rgbStringToArray, rgbArrayToHex } from '../assets/utils.js';
+import { rgbStringToArray, rgbArrayToHex } from '../assets/utils';
 
 export const processTextColor = (element) => {
     let color = window.getComputedStyle(element).color;
