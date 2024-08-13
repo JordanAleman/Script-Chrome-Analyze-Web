@@ -56,6 +56,20 @@ td {
 	border-right: 0;
 	vertical-align: bottom;
 }
+
+.tableSuccessFont {
+	background-color: #d4edda;
+	border-right: 2px dotted #000;
+}
+
+.tableSuccessFailedText {
+	font-size: 1rem;
+    font-weight: bold;
+}
+
+.tableFailedFont {
+	background-color: #F8D7DA;
+}
 /* -------------------------------------------------------------------------- */
 /*                                Switch slider                               */
 /* -------------------------------------------------------------------------- */

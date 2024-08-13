@@ -12,4 +12,8 @@ export const rgbStringToArray = rgb => {
     return match.slice(1, 4).map(v => Number(v)); // Extraer y convertir los valores a números
 };
 
-export const pxToRem = (px, base = 16) => (parseFloat(px) / base).toFixed(2) + 'rem';
+export const pxToRem = (px, base = 16) => {
+    const remValue = parseFloat(px) / base;
+    return parseFloat(remValue.toFixed(2)) + 'rem';
+};
+

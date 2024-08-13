@@ -45,7 +45,7 @@ export const createColorRows = (colors, tableBody, maxColumns = 3) => {
     const addColorRow = (colors, isMatched) => {
         let rowHtml = `<tr>`;
         colors.forEach(item => {
-            const matchName = item.name ? item.name : '<span style="color:red;">X</span>';
+            const matchName = item.name ? item.name : '<span class="tableSuccessFailedText">❌</span>';
             const cellStyle = isMatched ? 'class="tableSuccess"' : '';
             rowHtml += `
                 <td class="color-box" style="background-color: ${item.color};"></td>
@@ -60,18 +60,18 @@ export const createColorRows = (colors, tableBody, maxColumns = 3) => {
     const fillTable = (colorList, isMatched) => {
         let colorRow = [];
         let colorCount = 0;
-    
+
         colorList.forEach(item => {
             colorRow.push(item);
             colorCount++;
-    
+
             if (colorCount === maxColumns) {
                 addColorRow(colorRow, isMatched);
                 colorRow = [];
                 colorCount = 0;
             }
         });
-    
+
         if (colorRow.length > 0) addColorRow(colorRow, isMatched);
     };
 
@@ -87,36 +87,68 @@ export const createColorRows = (colors, tableBody, maxColumns = 3) => {
     fillTable(unmatchedColors, false);
 };
 
-// Función para crear la tabla con elementos
-export const createTable = (items, tableBody, headerId, maxColumns = 5, maxRows = 2) => {
+// Función para crear la tabla con elementos de tamaños de fuente
+export const createTable = (items, tableBody, headerId, maxColumns = 5) => {
     // Limpia el contenido existente en la tabla antes de agregar nuevas filas
     tableBody.innerHTML = '';
 
-    const totalItems = items.length;
-    const columns = Math.min(maxColumns, totalItems);
-    const rows = Math.min(maxRows, Math.ceil(totalItems / columns));
+    const matchedSizes = [];
+    const unmatchedSizes = [];
 
-    const tableHeader = document.getElementById(headerId);
-    tableHeader.setAttribute('colspan', columns);
-
-    let itemIndex = 0;
-    let rowsHtml = '';
-    for (let row = 0; row < rows; row++) {
-        let rowHtml = `<tr>`;
-        for (let col = 0; col < columns; col++) {
-            if (itemIndex < totalItems) {
-                const itemContent = items[itemIndex].split(' ');
-                rowHtml += `<td>${itemContent.join(' | ')}</td>`;
-                itemIndex++;
-            } else {
-                rowHtml += `<td></td>`; // Rellenar con celdas vacías si es necesario
-            }
+    // Separar los tamaños de fuente en coincidentes y no coincidentes
+    items.forEach(item => {
+        const [pxValue, remValue] = item.split(' | ');
+        const match = Object.entries(colorsJson['font-sizes']).find(([name, value]) => `${value}rem` === remValue);
+        if (match) {
+            matchedSizes.push({ pxValue, remValue, name: match[0] });
+        } else {
+            unmatchedSizes.push({ pxValue, remValue });
         }
-        rowHtml += `</tr>`;
-        rowsHtml += rowHtml;
+    });
+
+    const addSizeRow = (sizes, isMatched) => {
+        let rowHtml = '<tr>';
+        sizes.forEach(item => {
+            const matchName = item.name ? `<span class="tableSuccessFailedText">${item.name}</span>` : `<span class="tableSuccessFailedText">❌</span>`;
+            const cellStyle = isMatched ? 'class="tableSuccessFont"' : 'class="tableFailedFont"';
+            rowHtml += `
+                <td ${cellStyle}>${item.pxValue} | ${item.remValue} | ${matchName}</td>
+            `;
+        });
+        rowHtml += '</tr>';
+        tableBody.innerHTML += rowHtml;
+    };
+
+    const fillTable = (sizeList, isMatched) => {
+        let sizeRow = [];
+        let sizeCount = 0;
+
+        sizeList.forEach(item => {
+            sizeRow.push(item);
+            sizeCount++;
+
+            if (sizeCount === maxColumns) {
+                addSizeRow(sizeRow, isMatched);
+                sizeRow = [];
+                sizeCount = 0;
+            }
+        });
+
+        if (sizeRow.length > 0) addSizeRow(sizeRow, isMatched);
+    };
+
+    // Crear tabla para tamaños coincidentes
+    fillTable(matchedSizes, true);
+
+    // Añadir un margen entre tablas
+    if (unmatchedSizes.length > 0) {
+        tableBody.innerHTML += `<tr><td class="tableSeparator" colspan="${maxColumns}">.·´¯\`(&gt;▂&lt;)´¯\`·.</td></tr>`;
     }
-    tableBody.innerHTML = rowsHtml; // Limpia y añade todas las filas a la vez
+
+    // Crear tabla para tamaños no coincidentes
+    fillTable(unmatchedSizes, false);
 };
+
 
 // Función para crear el contenido del acordeón
 export const createAccordionContent = (bgColors, textColors, fontSizes) => {
@@ -142,7 +174,7 @@ export const createAccordionContent = (bgColors, textColors, fontSizes) => {
         ${createAccordionItem('Text Colors', textColors)}
         ${createAccordionItem('Font Sizes', fontSizes)}
     `;
-    
+
     accordionContainer.innerHTML = accordionHtml;
 
     // Ejecutar la funcionalidad del acordeón
@@ -151,7 +183,7 @@ export const createAccordionContent = (bgColors, textColors, fontSizes) => {
             const panel = header.nextElementSibling;
             // Inicialmente, establece max-height para que esté desplegado
             panel.style.maxHeight = panel.scrollHeight + "px";
-            
+
             header.addEventListener('click', () => {
                 if (panel.style.maxHeight) {
                     panel.style.maxHeight = null;
@@ -168,6 +200,6 @@ export const createAccordionContent = (bgColors, textColors, fontSizes) => {
 // Hacer que la vista de acordeón sea la predeterminada al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     const switchInput = document.querySelector('.switch input');
-    switchInput.checked = true; 
-    showResults(); 
+    switchInput.checked = true;
+    showResults();
 });
