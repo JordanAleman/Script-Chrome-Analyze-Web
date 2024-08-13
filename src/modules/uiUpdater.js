@@ -221,9 +221,3 @@ export const updateSummary = (sectionId, totalCount, matchedCount, unmatchedCoun
 };
 
 
-// Hacer que la vista de acordeón sea la predeterminada al cargar la página
-document.addEventListener('DOMContentLoaded', () => {
-    const switchInput = document.querySelector('.switch input');
-    switchInput.checked = true;
-    showResults();
-});
