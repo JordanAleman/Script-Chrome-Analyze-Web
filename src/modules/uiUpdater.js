@@ -85,6 +85,13 @@ export const createColorRows = (colors, tableBody, maxColumns = 3) => {
 
     // Crear tabla para colores no coincidentes
     fillTable(unmatchedColors, false);
+
+    // Devolver conteos para resumen
+    return {
+        matchedCount: matchedColors.length,
+        unmatchedCount: unmatchedColors.length,
+        totalCount: colors.length
+    };
 };
 
 // Función para crear la tabla con elementos de tamaños de fuente
@@ -147,6 +154,13 @@ export const createTable = (items, tableBody, headerId, maxColumns = 5) => {
 
     // Crear tabla para tamaños no coincidentes
     fillTable(unmatchedSizes, false);
+
+    // Devolver conteos para resumen
+    return {
+        matchedCount: matchedSizes.length,
+        unmatchedCount: unmatchedSizes.length,
+        totalCount: items.length
+    };
 };
 
 
@@ -196,6 +210,16 @@ export const createAccordionContent = (bgColors, textColors, fontSizes) => {
 
     accordionContainer.style.display = 'block';
 };
+
+export const updateSummary = (sectionId, totalCount, matchedCount, unmatchedCount) => {
+    const summaryElement = document.querySelector(`#${sectionId} .summary`);
+    summaryElement.innerHTML = `
+        <span class="summaryInfo">Nº: ${totalCount}</span>
+        <span class="summarySkaoa">Skapa: ${matchedCount}</span>  
+        <span class="summaryNoSkapa">No Skapa: ${unmatchedCount}</span>
+    `;
+};
+
 
 // Hacer que la vista de acordeón sea la predeterminada al cargar la página
 document.addEventListener('DOMContentLoaded', () => {

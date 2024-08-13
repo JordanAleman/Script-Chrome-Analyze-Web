@@ -22,9 +22,15 @@ const toggleView = () => {
             const tableBodyTextColors = document.getElementById("resultTextColors");
             const tableBodySizes = document.getElementById("resultFontSizes");
 
-            uiUpdater.createColorRows(cachedResults.bgColors, tableBodyColors);
-            uiUpdater.createColorRows(cachedResults.textColors, tableBodyTextColors);
-            uiUpdater.createTable(cachedResults.fontSizes, tableBodySizes, "fontSizeHeader");
+            // Crear filas de color y obtener conteos
+            const colorCounts = uiUpdater.createColorRows(cachedResults.bgColors, tableBodyColors);
+            const textColorCounts = uiUpdater.createColorRows(cachedResults.textColors, tableBodyTextColors);
+            const fontSizeCounts = uiUpdater.createTable(cachedResults.fontSizes, tableBodySizes, "fontSizeHeader");
+
+            // Actualizar resúmenes después de crear las filas
+            uiUpdater.updateSummary("backgroundColorSection", colorCounts.totalCount, colorCounts.matchedCount, colorCounts.unmatchedCount);
+            uiUpdater.updateSummary("textColorSection", textColorCounts.totalCount, textColorCounts.matchedCount, textColorCounts.unmatchedCount);
+            uiUpdater.updateSummary("fontSizeSection", fontSizeCounts.totalCount, fontSizeCounts.matchedCount, fontSizeCounts.unmatchedCount);
         }
 
         uiUpdater.showResults();

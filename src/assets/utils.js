@@ -5,7 +5,7 @@ export const rgbStringToArray = rgb => {
     if (typeof rgb !== 'string') {
         return null; // Si no es una cadena, devolver null
     }
-    const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    const match = RegExp(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).exec(rgb);
     if (!match) {
         return null; // Si no coincide con el formato RGB, devolver null
     }
