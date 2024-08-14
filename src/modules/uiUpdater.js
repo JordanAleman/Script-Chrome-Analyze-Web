@@ -15,7 +15,7 @@ export const showResults = () => {
     const isAccordionView = document.querySelector('.switch input').checked;
 
     if (isAccordionView) {
-        document.getElementById('accordionResults').style.display = 'flex';
+        document.getElementById('accordionResults').style.display = 'grid';
         document.getElementById('results').style.display = 'none'; // Ocultar tabla
     } else {
         document.getElementById('results').style.display = 'flex';
@@ -165,7 +165,7 @@ export const createTable = (items, tableBody, headerId, maxColumns = 5) => {
 
 
 // Función para crear el contenido del acordeón
-export const createAccordionContent = (bgColors, textColors, fontSizes) => {
+export const createAccordionContent = (...accordionItems) => {
     const accordionContainer = document.getElementById('accordionResults');
     accordionContainer.innerHTML = ''; // Limpiar contenido existente
 
@@ -184,9 +184,9 @@ export const createAccordionContent = (bgColors, textColors, fontSizes) => {
     };
 
     const accordionHtml = `
-        ${createAccordionItem('Background Colors', bgColors)}
-        ${createAccordionItem('Text Colors', textColors)}
-        ${createAccordionItem('Font Sizes', fontSizes)}
+        ${createAccordionItem('Background Colors', accordionItems.bgColors)}
+        ${createAccordionItem('Text Colors', accordionItems.textColors)}
+        ${createAccordionItem('Font Sizes', accordionItems.fontSizes)}
     `;
 
     accordionContainer.innerHTML = accordionHtml;

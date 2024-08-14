@@ -1,6 +1,8 @@
 // /styles/components/_accordion.scss
 
 .accordion-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); // Ajuste dinámico
     width: 100%;
     padding: 1rem 0;
 }
@@ -15,6 +17,7 @@
     font-weight: bold;
     text-align: start;
     transition: background-color 0.4s, color 0.4s;
+    display: block; // Asegurar que ocupen todo el espacio disponible
 }
 
 .accordion.active,
