@@ -1,0 +1,31 @@
+// /styles/components/_summary.scss
+
+.containerResult {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.summary {
+    display: flex;
+    border: 2px outset black;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.summary span {
+    padding: 0.5rem;
+}
+
+.summaryInfo {
+    background-color: #D1ECF1;
+}
+
+.summarySkaoa {
+    background-color: #D4EDDA;
+}
+
+.summaryNoSkapa {
+    background-color: #F8D7DA;
+}

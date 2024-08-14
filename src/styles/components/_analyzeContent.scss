@@ -1,0 +1,87 @@
+// /styles/components/_analyzeContent.scss
+
+/* -------------------------------------------------------------------------- */
+/*                               Analyze Content                              */
+/* -------------------------------------------------------------------------- */
+.analyzeContent {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	margin-bottom: 1.5rem;
+}
+
+.buttonAnalyze {
+	cursor: pointer;
+	padding: 0.5rem 2rem;
+	border-radius: 5px;
+	font-weight: bold;
+	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+#analyzeButton {
+	background-color: #0058a3;
+	color: white;
+	height: 78px;
+}
+
+#analyzeButton:hover {
+	background-color: #004f93;
+}
+
+#searchByIdButton {
+	background-color: #ffda1a;
+	color: black;
+	border-color: #ffda1a;
+}
+
+#searchByIdButton:hover {
+	background-color: #d99e00;
+}
+
+.analyzeContent .analyzeContentSearch {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	row-gap: 0.5rem;
+	width: 30%;
+}
+
+.analyzeContent .analyzeContentSearch span {
+	margin: 0;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.inputAnalyze {
+	padding: 0.5rem;
+}
+
+/* ----------------------------- Search Element ----------------------------- */
+.selectorType {
+	position: absolute;
+	top: 40px;
+	padding: 0.6em 0;
+	width: 5rem;
+}
+
+#elementSelector {
+	padding-left: 5.5rem;
+}
+
+#searchButton {
+	background-color: #ffda1a;
+	color: black;
+	border-color: #ffda1a;
+}
+
+#searchButton:hover {
+	background-color: #d99e00;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                  Starting                                  */
+/* -------------------------------------------------------------------------- */
+#analyzeContent, #results {
+	display: none;
+}

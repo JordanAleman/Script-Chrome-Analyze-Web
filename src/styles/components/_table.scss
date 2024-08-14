@@ -1,0 +1,49 @@
+// /styles/components/_table.scss
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: center;
+}
+
+td {
+    height: 50px;
+}
+
+.color-box {
+    width: 50px;
+    height: 50px;
+}
+
+.tableSuccess {
+    background-color: #03b82d;
+    border-right: 2px dotted #000;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.tableSeparator {
+    border-left: 0;
+    border-right: 0;
+    vertical-align: bottom;
+}
+
+.tableSuccessFont {
+    background-color: #d4edda;
+    border-right: 2px dotted #000;
+}
+
+.tableSuccessFailedText {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.tableFailedFont {
+    background-color: #F8D7DA;
+}
