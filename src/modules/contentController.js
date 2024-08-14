@@ -13,9 +13,9 @@ const toggleView = () => {
     if (cachedResults) {
         if (isAccordionView) {
             uiUpdater.createAccordionContent(
-                cachedResults.bgColors,
-                cachedResults.textColors,
-                cachedResults.fontSizes,
+                ['Background Colors', cachedResults.bgColors],
+                ['Text Colors', cachedResults.textColors],
+                ['Font Sizes', cachedResults.fontSizes],
             );
         } else {
             const tableBodyColors = document.getElementById("resultBackgroundColors");

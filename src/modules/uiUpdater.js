@@ -183,11 +183,7 @@ export const createAccordionContent = (...accordionItems) => {
         return itemHtml;
     };
 
-    const accordionHtml = `
-        ${createAccordionItem('Background Colors', accordionItems.bgColors)}
-        ${createAccordionItem('Text Colors', accordionItems.textColors)}
-        ${createAccordionItem('Font Sizes', accordionItems.fontSizes)}
-    `;
+    const accordionHtml = accordionItems.map(([title, items]) => createAccordionItem(title, items)).join('');
 
     accordionContainer.innerHTML = accordionHtml;
 
