@@ -5,7 +5,7 @@ import colorsJson from '../assets/skapa.json';
 export const showNoResultsMessage = (message) => {
     const noResults = document.getElementById('noResults');
     noResults.innerText = message;
-    noResults.style.display = 'block';
+    noResults.style.display = 'flex';
     document.getElementById('results').style.display = 'none'; // Ocultar tabla si hay mensaje de sin resultados
     document.getElementById('accordionResults').style.display = 'none'; // Ocultar acordeón si hay mensaje de sin resultados
 };
@@ -15,10 +15,10 @@ export const showResults = () => {
     const isAccordionView = document.querySelector('.switch input').checked;
 
     if (isAccordionView) {
-        document.getElementById('accordionResults').style.display = 'block';
+        document.getElementById('accordionResults').style.display = 'flex';
         document.getElementById('results').style.display = 'none'; // Ocultar tabla
     } else {
-        document.getElementById('results').style.display = 'block';
+        document.getElementById('results').style.display = 'flex';
         document.getElementById('accordionResults').style.display = 'none'; // Ocultar acordeón
     }
 
@@ -208,7 +208,7 @@ export const createAccordionContent = (bgColors, textColors, fontSizes) => {
         });
     });
 
-    accordionContainer.style.display = 'block';
+    accordionContainer.style.display = 'flex';
 };
 
 export const updateSummary = (sectionId, totalCount, matchedCount, unmatchedCount) => {

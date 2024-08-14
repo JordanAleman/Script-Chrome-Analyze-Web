@@ -5,7 +5,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Style Analyzer</title>
 		<link rel="stylesheet" href="../dist/main.css" />
-		<!-- <link rel="stylesheet" href="popup.css" /> -->
 	</head>
 	<body>
 		<header class="header">
@@ -22,7 +21,7 @@
 		<main class="main">
 			<div class="analyzeContent">
 				<div class="analyzeContentSearch">
-					<span>Analyze all page <br />(Max 10 elements)</span>
+					<span>Analyze all page <br />(Max 100 elements)</span>
 					<button id="analyzeButton" class="buttonAnalyze">
 						Analyze Page
 					</button>
@@ -71,63 +70,68 @@
 			</div>
 
 			<div id="results" class="resultCheckUsedStyleRulesOnWeb">
+				<hr />
 
-				<hr>
-				
-				<div id="backgroundColorSection" class="containerResult">
-					<h2>Used Background Colors (HEX)</h2>
-					<div class="summary">
-
+				<div class="resultsContainer">
+					<div id="backgroundColorSection" class="containerResult">
+						<h2>Used Background Colors (HEX)</h2>
+						<div class="summary"></div>
+					</div>
+					<div class="tableContainer">
+						<table id="bgColorsTable">
+							<thead>
+								<tr>
+									<th>Color</th>
+									<th>HEX</th>
+									<th>Skapa name</th>
+								</tr>
+							</thead>
+							<tbody id="resultBackgroundColors"></tbody>
+						</table>
 					</div>
 				</div>
-				<table id="bgColorsTable">
-					<thead>
-						<tr>
-							<th>Color</th>
-							<th>HEX</th>
-							<th>Skapa name</th>
-						</tr>
-					</thead>
-					<tbody id="resultBackgroundColors"></tbody>
-				</table>
 
-				<hr>
+				<hr />
 
-				<div id="textColorSection" class="containerResult">
-					<h2>Used Colors (HEX)</h2>
-					<div class="summary">
-
+				<div class="resultsContainer">
+					<div id="textColorSection" class="containerResult">
+						<h2>Used Colors (HEX)</h2>
+						<div class="summary"></div>
+					</div>
+					<div class="tableContainer">
+						<table id="textColorsTable">
+							<thead>
+								<tr>
+									<th>Color</th>
+									<th>HEX</th>
+									<th>Skapa name</th>
+								</tr>
+							</thead>
+							<tbody id="resultTextColors"></tbody>
+						</table>
 					</div>
 				</div>
-				<table id="textColorsTable">
-					<thead>
-						<tr>
-							<th>Color</th>
-							<th>HEX</th>
-							<th>Skapa name</th>
-						</tr>
-					</thead>
-					<tbody id="resultTextColors"></tbody>
-				</table>
 
-				<hr>
+				<hr />
 
-				<div id="fontSizeSection" class="containerResult">
-					<h2>Used Font Sizes (REM)</h2>
-					<div class="summary">
-
+				<div class="resultsContainer">
+					<div id="fontSizeSection" class="containerResult">
+						<h2>Used Font Sizes (REM)</h2>
+						<div class="summary"></div>
+					</div>
+					<div class="tableContainer">
+						<table id="fontSizesTable">
+							<thead>
+								<tr>
+									<th id="fontSizeHeader" colspan="1">
+										Font Size (REM)
+									</th>
+								</tr>
+							</thead>
+							<tbody id="resultFontSizes"></tbody>
+						</table>
 					</div>
 				</div>
-				<table id="fontSizesTable">
-					<thead>
-						<tr>
-							<th id="fontSizeHeader" colspan="1">
-								Font Size (REM)
-							</th>
-						</tr>
-					</thead>
-					<tbody id="resultFontSizes"></tbody>
-				</table>
 			</div>
 
 			<div id="noResults">Element not found!</div>
