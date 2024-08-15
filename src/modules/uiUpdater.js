@@ -30,5 +30,3 @@ document.addEventListener('DOMContentLoaded', () => {
     switchInput.checked = true; // Establece la vista acordeón como predeterminada
     showResults(); // Muestra los resultados en el modo acordeón
 });
-
-

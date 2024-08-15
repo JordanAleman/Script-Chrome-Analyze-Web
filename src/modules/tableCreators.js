@@ -153,7 +153,7 @@ export const createTableSizes = (items, tableBody, maxColumns = 5) => {
 
 /**
  * Crear filas en la tabla para los resultados de imágenes con y sin alt.
- * @param {Array} images Array de objetos con {name, alt} de las imágenes.
+ * @param {Array} images Array de objetos con {name, alt, src} de las imágenes.
  * @param {HTMLElement} tableBody Elemento tbody donde se agregarán las filas.
  * @returns {Object} Resumen de imágenes procesadas.
  */
@@ -170,9 +170,11 @@ export const createImageAltTable = (images, tableBody) => {
 
     images.forEach(image => {
         const altText = image.alt === '❌' ? '<span class="tableSuccessFailedText">❌</span>' : image.alt;
-        
+        // <td><img src="${image.src}" alt="${image.alt}" style="max-width: 100px; height: auto;"></td>
+
         tableRows += `
             <tr>
+                <td><img src="${image.src}" alt="${image.alt}" style="max-width: 100px; height: auto;"></td>
                 <td>${image.name}</td>
                 <td>${altText}</td>
             </tr>
