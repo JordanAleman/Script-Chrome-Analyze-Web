@@ -4,6 +4,7 @@ import * as domUtils from './domUtils.js';
 import * as uiUpdater from './uiUpdater.js';
 import { updateSummary, updateImageSummary } from './summary.js';
 import * as tableCreators from './tableCreators.js';
+import * as accordionCreators from './accordionCreators.js';
 
 let cachedResults = null;
 
@@ -14,7 +15,7 @@ const toggleView = () => {
 
     if (cachedResults) {
         if (isAccordionView) {
-            uiUpdater.createAccordionContent(
+            accordionCreators.createAccordionContent(
                 ['Background Colors', cachedResults.bgColors],
                 ['Text Colors', cachedResults.textColors],
                 ['Font Sizes', cachedResults.fontSizes],
