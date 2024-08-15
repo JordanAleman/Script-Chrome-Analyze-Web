@@ -1,7 +1,9 @@
 // src/modules/uiUpdater.js
+
 import skapaJson from '../assets/skapa.json';
 import { formatString } from '../assets/utils';
 import { processColorItem, processFontSizeItem, sortMatchedItems } from './dataProcessing';
+import { updateSummary } from './summary.js';
 
 // Mostrar el mensaje de "Sin Resultados" y ocultar el contenido
 export const showNoResultsMessage = (message) => {
@@ -26,151 +28,6 @@ export const showResults = () => {
 
     document.getElementById('noResults').style.display = 'none'; // Ocultar mensaje de sin resultados
 };
-
-export const createColorRows = (colors, tableBody, maxColumns = 3) => {
-    // Limpia el contenido existente en la tabla antes de agregar nuevas filas
-    tableBody.innerHTML = '';
-
-    const matchedColors = [];
-    const unmatchedColors = [];
-
-    // Separar los colores en coincidentes y no coincidentes
-    colors.forEach(color => {
-        const match = Object.entries(skapaJson.colors).find(([name, value]) => value.toLowerCase() === color.toLowerCase());
-        if (match) {
-            matchedColors.push({ color, name: match[0] });
-        } else {
-            unmatchedColors.push({ color });
-        }
-    });
-
-    // Ordenar colores coincidentes por el nombre del JSON
-    matchedColors.sort((a, b) => a.name.localeCompare(b.name));
-
-    const addColorRow = (colors, isMatched) => {
-        let rowHtml = `<tr>`;
-        colors.forEach(item => {
-            const matchName = item.name ? item.name : '<span class="tableSuccessFailedText">❌</span>';
-            const cellStyle = isMatched ? 'class="tableSuccess"' : '';
-            rowHtml += `
-                <td class="color-box" style="background-color: ${item.color};"></td>
-                <td>${item.color}</td>
-                <td ${cellStyle}>${matchName}</td>
-            `;
-        });
-        rowHtml += `</tr>`;
-        tableBody.innerHTML += rowHtml;
-    };
-
-    const fillTable = (colorList, isMatched) => {
-        let colorRow = [];
-        let colorCount = 0;
-
-        colorList.forEach(item => {
-            colorRow.push(item);
-            colorCount++;
-
-            if (colorCount === maxColumns) {
-                addColorRow(colorRow, isMatched);
-                colorRow = [];
-                colorCount = 0;
-            }
-        });
-
-        if (colorRow.length > 0) addColorRow(colorRow, isMatched);
-    };
-
-    // Crear tabla para colores coincidentes
-    fillTable(matchedColors, true);
-
-    // Añadir un margen entre tablas
-    if (unmatchedColors.length > 0) {
-        tableBody.innerHTML += `<tr><td class="tableSeparator" colspan="${maxColumns * 3}">.·´¯\`(&gt;▂&lt;)´¯\`·.</td></tr>`;
-    }
-
-    // Crear tabla para colores no coincidentes
-    fillTable(unmatchedColors, false);
-
-    // Devolver conteos para resumen
-    return {
-        matchedCount: matchedColors.length,
-        unmatchedCount: unmatchedColors.length,
-        totalCount: colors.length
-    };
-};
-
-// Función para crear la tabla con elementos de tamaños de fuente
-export const createTableSizes = (items, tableBody, maxColumns = 5) => {
-    // Limpia el contenido existente en la tabla antes de agregar nuevas filas
-    tableBody.innerHTML = '';
-
-    const matchedSizes = [];
-    const unmatchedSizes = [];
-
-    // Separar los tamaños de fuente en coincidentes y no coincidentes
-    items.forEach(item => {
-        const [pxValue, remValue] = item.split(' | ');
-        const match = Object.entries(skapaJson['font-sizes']).find(([name, value]) => `${value}rem` === remValue);
-        if (match) {
-            matchedSizes.push({ pxValue, remValue, name: match[0] });
-        } else {
-            unmatchedSizes.push({ pxValue, remValue });
-        }
-    });
-
-    // Ordenar tamaños coincidentes por el nombre del JSON
-    matchedSizes.sort((a, b) => a.name.localeCompare(b.name));
-
-    const addSizeRow = (sizes, isMatched) => {
-        let rowHtml = '<tr>';
-        sizes.forEach(item => {
-            const matchName = item.name ? `<span class="tableSuccessFailedText">${item.name}</span>` : `<span class="tableSuccessFailedText">❌</span>`;
-            const cellStyle = isMatched ? 'class="tableSuccessFont"' : 'class="tableFailedFont"';
-            rowHtml += `
-                <td ${cellStyle}>${item.pxValue} | ${item.remValue} | ${matchName}</td>
-            `;
-        });
-        rowHtml += '</tr>';
-        tableBody.innerHTML += rowHtml;
-    };
-
-    const fillTable = (sizeList, isMatched) => {
-        let sizeRow = [];
-        let sizeCount = 0;
-
-        sizeList.forEach(item => {
-            sizeRow.push(item);
-            sizeCount++;
-
-            if (sizeCount === maxColumns) {
-                addSizeRow(sizeRow, isMatched);
-                sizeRow = [];
-                sizeCount = 0;
-            }
-        });
-
-        if (sizeRow.length > 0) addSizeRow(sizeRow, isMatched);
-    };
-
-    // Crear tabla para tamaños coincidentes
-    fillTable(matchedSizes, true);
-
-    // Añadir un margen entre tablas
-    if (unmatchedSizes.length > 0) {
-        tableBody.innerHTML += `<tr><td class="tableSeparator" colspan="${maxColumns}">.·´¯\`(&gt;▂&lt;)´¯\`·.</td></tr>`;
-    }
-
-    // Crear tabla para tamaños no coincidentes
-    fillTable(unmatchedSizes, false);
-
-    // Devolver conteos para resumen
-    return {
-        matchedCount: matchedSizes.length,
-        unmatchedCount: unmatchedSizes.length,
-        totalCount: items.length
-    };
-};
-
 
 // Función para crear el contenido del acordeón
 export const createAccordionContent = (...accordionItems) => {
@@ -271,21 +128,30 @@ export const createAccordionContent = (...accordionItems) => {
     });
 };
 
+/**
+ * Crear contenido del acordeón para los resultados de imágenes.
+ * @param {Array} images Array de objetos con {name, alt} de las imágenes.
+ * @param {HTMLElement} accordionElement Elemento donde se agregará el contenido.
+ */
+export const createAccordionImagesContent = (images, accordionElement) => {
+    accordionElement.innerHTML = ''; // Limpiar contenido previo
 
+    images.forEach(image => {
+        const item = document.createElement('div');
+        item.classList.add('accordion-item');
 
-export const updateSummary = (sectionId, totalCount, matchedCount, unmatchedCount, isTable = true) => {
-    const summaryElement = document.querySelector(`#${sectionId} .summary`);
+        const title = document.createElement('h3');
+        title.textContent = image.name;
+        title.classList.add('accordion-title');
 
-    // Determina los textos y símbolos a mostrar basado en el parámetro isTable
-    const matchedText = isTable ? `Skapa: ${matchedCount}` : `✔: ${matchedCount}`;
-    const unmatchedText = isTable ? `No Skapa: ${unmatchedCount}` : `❌: ${unmatchedCount}`;
+        const content = document.createElement('div');
+        content.textContent = `Alt text: ${image.alt}`;
+        content.classList.add('accordion-content');
 
-    // Actualiza el contenido del elemento summary
-    summaryElement.innerHTML = `
-        <span class="summaryInfo">Nº: ${totalCount}</span>
-        <span class="summarySkapa">${matchedText}</span>  
-        <span class="summaryNoSkapa">${unmatchedText}</span>
-    `;
+        item.appendChild(title);
+        item.appendChild(content);
+        accordionElement.appendChild(item);
+    });
 };
 
 // Hacer que la vista de acordeón sea la predeterminada al cargar la página

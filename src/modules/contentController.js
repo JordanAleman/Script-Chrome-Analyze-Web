@@ -2,6 +2,8 @@
 
 import * as domUtils from './domUtils.js';
 import * as uiUpdater from './uiUpdater.js';
+import { updateSummary, updateImageSummary } from './summary.js';
+import * as tableCreators from './tableCreators.js';
 
 let cachedResults = null;
 
@@ -21,21 +23,29 @@ const toggleView = () => {
             const tableBodyColors = document.getElementById("resultBackgroundColors");
             const tableBodyTextColors = document.getElementById("resultTextColors");
             const tableBodySizes = document.getElementById("resultFontSizes");
+            const tableBodyImages = document.getElementById("resultImagesAlt");
 
             // Crear filas de color y obtener conteos
-            const colorCounts = uiUpdater.createColorRows(cachedResults.bgColors, tableBodyColors);
-            const textColorCounts = uiUpdater.createColorRows(cachedResults.textColors, tableBodyTextColors);
-            const fontSizeCounts = uiUpdater.createTableSizes(cachedResults.fontSizes, tableBodySizes);
+            const colorCounts = tableCreators.createColorRows(cachedResults.bgColors, tableBodyColors);
+            const textColorCounts = tableCreators.createColorRows(cachedResults.textColors, tableBodyTextColors);
+            const fontSizeCounts = tableCreators.createTableSizes(cachedResults.fontSizes, tableBodySizes);
+
+            // Crear tabla para imágenes
+            const imageCounts = tableCreators.createImageAltTable(cachedResults.images, tableBodyImages);
 
             // Actualizar resúmenes después de crear las filas
-            uiUpdater.updateSummary("backgroundColorSection", colorCounts.totalCount, colorCounts.matchedCount, colorCounts.unmatchedCount);
-            uiUpdater.updateSummary("textColorSection", textColorCounts.totalCount, textColorCounts.matchedCount, textColorCounts.unmatchedCount);
-            uiUpdater.updateSummary("fontSizeSection", fontSizeCounts.totalCount, fontSizeCounts.matchedCount, fontSizeCounts.unmatchedCount);
+            updateSummary("backgroundColorSection", colorCounts.totalCount, colorCounts.matchedCount, colorCounts.unmatchedCount);
+            updateSummary("textColorSection", textColorCounts.totalCount, textColorCounts.matchedCount, textColorCounts.unmatchedCount);
+            updateSummary("fontSizeSection", fontSizeCounts.totalCount, fontSizeCounts.matchedCount, fontSizeCounts.unmatchedCount);
+
+            // Actualizar resumen de imágenes
+            updateImageSummary("imageAltSection", imageCounts.totalImages, imageCounts.imagesWithAlt, imageCounts.imagesWithoutAlt);
         }
 
         uiUpdater.showResults();
     }
 };
+
 
 toggleViewButton.addEventListener('change', toggleView);
 
@@ -68,19 +78,18 @@ export const updatePopup = (selector, context) => {
         action = isSearchById ? 'analyzeElementAndChildren' : 'analyzeElement';
     }
 
-
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
         chrome.tabs.sendMessage(tabs[0].id, { action, selector }, response => {
             if (chrome.runtime.lastError) {
                 console.error('Error al recibir respuesta (っ °Д °;)っ:', chrome.runtime.lastError.message);
             } else if (response) {
-                const { bgColors, textColors, fontSizes, elementFound } = response;
+                const { bgColors, textColors, fontSizes, images, elementFound } = response;
 
                 if (elementFound === false) {
                     uiUpdater.showNoResultsMessage(`Element "${selector}" not found!`);
                 } else {
                     // Guardar resultados en caché
-                    cachedResults = { bgColors, textColors, fontSizes };
+                    cachedResults = { bgColors, textColors, fontSizes, images };
 
                     toggleView();
                 }
