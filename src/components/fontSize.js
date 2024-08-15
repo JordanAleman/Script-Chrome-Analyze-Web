@@ -29,5 +29,5 @@ export const padItem = (item, matchName) => {
 
     const paddedPx = pxValue.padStart(2, '0');
 
-    return `${paddedPx} | ${formattedRem} | ${matchName}`;
+    return `${paddedPx} | ${formattedRem}rem | ${matchName}`;
 };

@@ -37,7 +37,8 @@
         padding: 1rem 1.5rem;
     }
 
-    .panelContent {
+    .panelContentMatched,
+    .panelContentUnmatched {
         font-family: monospace;
         font-size: 12px;
     }

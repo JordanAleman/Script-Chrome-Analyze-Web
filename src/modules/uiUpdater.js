@@ -177,14 +177,17 @@ export const createAccordionContent = (...accordionItems) => {
     const accordionContainer = document.getElementById('accordionResults');
     accordionContainer.innerHTML = ''; // Limpiar contenido existente
 
-    const createAccordionItem = (title, items) => {
+    const createAccordionItem = (title, matchedItems, unmatchedItems) => {
         const itemHtml = `
             <div id="${formatString(title, 'Accordion')}" class="accordion-item">
                 <button class="accordion">${title}</button>
                 <div class="panel">
                     <div class="summary summaryAccordion"></div>
-                    <ul class="panelContent">
-                        ${items.map(i => `<li>${i}</li>`).join('')}
+                    <ul class="panelContentMatched">
+                        ${matchedItems.map(i => `<li>${i}</li>`).join('')}
+                    </ul>
+                    <ul class="panelContentUnmatched">
+                        ${unmatchedItems.map(i => `<li>${i}</li>`).join('')}
                     </ul>
                 </div>
             </div>
@@ -193,8 +196,11 @@ export const createAccordionContent = (...accordionItems) => {
     };
 
     const accordionHtml = accordionItems.map(([title, items]) => {
-        // Procesar ítems y determinar si son colores o tamaños de fuente
-        const processedItems = items.map(item => {
+        const matchedItems = [];
+        const unmatchedItems = [];
+
+        // Separar ítems en matched y unmatched
+        items.forEach(item => {
             const isColor = title.includes("Color");
             const isFontSize = title.includes("Size");
             let matchName = '❌';
@@ -205,21 +211,44 @@ export const createAccordionContent = (...accordionItems) => {
                 const colorsLowerCase = Object.values(skapaJson.colors).map(color => color.toLowerCase());
                 if (colorsLowerCase.includes(lowerCaseItem)) {
                     matchName = Object.keys(skapaJson.colors).find(key => skapaJson.colors[key].toLowerCase() === lowerCaseItem);
+                    processedItem = `${item} | ${matchName}`;
+                    matchedItems.push(processedItem);
+                } else {
+                    processedItem = `${item} | ❌`;
+                    unmatchedItems.push(processedItem);
                 }
-                processedItem = `${item} | ${matchName}`;
             } else if (isFontSize) {
                 const [, remValue] = item.split(' | ');
                 const match = Object.entries(skapaJson['font-sizes']).find(([name, value]) => `${value}rem` === remValue);
                 if (match) {
                     matchName = match[0];
+                    processedItem = padItem(item, matchName); // Formatear y alinear tamaño de fuente
+                    matchedItems.push(processedItem);
+                } else {
+                    processedItem = `${item} | ❌`;
+                    unmatchedItems.push(processedItem);
                 }
-                processedItem = padItem(item, matchName); // Formatear y alinear tamaño de fuente
             }
-
-            return processedItem;
         });
 
-        return createAccordionItem(title, processedItems);
+        // Ordenar los matchedItems
+        if (title.includes("Color")) {
+            matchedItems.sort((a, b) => {
+                const aName = a.split(' | ')[1];
+                const bName = b.split(' | ')[1];
+                return aName.localeCompare(bName);
+            });
+        } else if (title.includes("Size")) {
+            matchedItems.sort((a, b) => {
+                const aName = a.split(' | ')[1];
+                const bName = b.split(' | ')[1];
+                const fontSizeOrder = Object.keys(skapaJson['font-sizes']);
+                return fontSizeOrder.indexOf(aName) - fontSizeOrder.indexOf(bName);
+            });
+        }
+
+        // Crear el HTML para el acordeón con las dos listas separadas
+        return createAccordionItem(title, matchedItems, unmatchedItems);
     }).join('');
 
     accordionContainer.innerHTML = accordionHtml;
@@ -228,7 +257,6 @@ export const createAccordionContent = (...accordionItems) => {
     requestAnimationFrame(() => {
         document.querySelectorAll('.accordion').forEach(header => {
             const panel = header.nextElementSibling;
-            // Inicialmente, establece max-height para que esté desplegado
             panel.style.maxHeight = panel.scrollHeight + "px";
 
             header.addEventListener('click', () => {
@@ -246,8 +274,6 @@ export const createAccordionContent = (...accordionItems) => {
         let matchedCount = 0;
         let unmatchedCount = 0;
         let id = formatString(title, 'Accordion');
-        console.log(`Processing: ${id}`); // Verifica el ID generado
-
 
         items.forEach(item => {
             const isColor = id.includes("Color");
@@ -255,18 +281,14 @@ export const createAccordionContent = (...accordionItems) => {
             let isMatched = false;
 
             if (isColor) {
-                // Convertir item a minúsculas y comparar con colores en minúsculas
                 const lowerCaseItem = item.toLowerCase();
                 const colorsLowerCase = Object.values(skapaJson.colors).map(color => color.toLowerCase());
                 isMatched = colorsLowerCase.includes(lowerCaseItem);
             } else if (isFontSize) {
-                // Comparar tamaños de fuente
-                const [, remValue] = item.split(' | '); // Extraer solo remValue
+                const [, remValue] = item.split(' | ');
                 const remValueLowerCase = remValue.toLowerCase();
                 isMatched = Object.values(skapaJson['font-sizes']).some(value => `${value}rem`.toLowerCase() === remValueLowerCase);
             }
-
-            console.log(`Item: ${item}, Matched: ${isMatched}`); // Verifica el resultado de cada comparación
 
             if (isMatched) {
                 matchedCount++;
@@ -275,12 +297,11 @@ export const createAccordionContent = (...accordionItems) => {
             }
         });
 
-
-        console.log(`Summary for ${id}: Total: ${items.length}, Matched: ${matchedCount}, Unmatched: ${unmatchedCount}`);
         updateSummary(id, items.length, matchedCount, unmatchedCount, false);
     });
-
 };
+
+
 
 export const updateSummary = (sectionId, totalCount, matchedCount, unmatchedCount, isTable = true) => {
     const summaryElement = document.querySelector(`#${sectionId} .summary`);
