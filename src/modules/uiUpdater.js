@@ -1,5 +1,5 @@
 // src/modules/uiUpdater.js
-import colorsJson from '../assets/skapa.json';
+import skapaJson from '../assets/skapa.json';
 import { formatString } from '../assets/utils';
 
 // Mostrar el mensaje de "Sin Resultados" y ocultar el contenido
@@ -35,7 +35,7 @@ export const createColorRows = (colors, tableBody, maxColumns = 3) => {
 
     // Separar los colores en coincidentes y no coincidentes
     colors.forEach(color => {
-        const match = Object.entries(colorsJson.colors).find(([name, value]) => value.toLowerCase() === color.toLowerCase());
+        const match = Object.entries(skapaJson.colors).find(([name, value]) => value.toLowerCase() === color.toLowerCase());
         if (match) {
             matchedColors.push({ color, name: match[0] });
         } else {
@@ -106,7 +106,7 @@ export const createTable = (items, tableBody, headerId, maxColumns = 5) => {
     // Separar los tamaños de fuente en coincidentes y no coincidentes
     items.forEach(item => {
         const [pxValue, remValue] = item.split(' | ');
-        const match = Object.entries(colorsJson['font-sizes']).find(([name, value]) => `${value}rem` === remValue);
+        const match = Object.entries(skapaJson['font-sizes']).find(([name, value]) => `${value}rem` === remValue);
         if (match) {
             matchedSizes.push({ pxValue, remValue, name: match[0] });
         } else {
@@ -207,24 +207,31 @@ export const createAccordionContent = (...accordionItems) => {
     });
 
     // Actualizar el resumen después de crear el acordeón
-    accordionItems.forEach(([ title, items ]) => {
+    accordionItems.forEach(([title, items]) => {
         let matchedCount = 0;
         let unmatchedCount = 0;
-        let id = formatString(title, 'Accordion'); 
+        let id = formatString(title, 'Accordion');
+        console.log(`Processing: ${id}`); // Verifica el ID generado
+
 
         items.forEach(item => {
             const isColor = id.includes("Color");
-            const isFontSize = id.includes("FontSize");
+            const isFontSize = id.includes("Size");
             let isMatched = false;
 
             if (isColor) {
-                // Comparar colores
-                isMatched = Object.values(colorsJson.colors).includes(item.toLowerCase());
+                // Convertir item a minúsculas y comparar con colores en minúsculas
+                const lowerCaseItem = item.toLowerCase();
+                const colorsLowerCase = Object.values(skapaJson.colors).map(color => color.toLowerCase());
+                isMatched = colorsLowerCase.includes(lowerCaseItem);
             } else if (isFontSize) {
                 // Comparar tamaños de fuente
-                const [pxValue, remValue] = item.split(' | ');
-                isMatched = Object.values(colorsJson['font-sizes']).some(value => `${value}rem` === remValue);
+                const [, remValue] = item.split(' | '); // Extraer solo remValue
+                const remValueLowerCase = remValue.toLowerCase();
+                isMatched = Object.values(skapaJson['font-sizes']).some(value => `${value}rem`.toLowerCase() === remValueLowerCase);
             }
+
+            console.log(`Item: ${item}, Matched: ${isMatched}`); // Verifica el resultado de cada comparación
 
             if (isMatched) {
                 matchedCount++;
@@ -233,6 +240,8 @@ export const createAccordionContent = (...accordionItems) => {
             }
         });
 
+
+        console.log(`Summary for ${id}: Total: ${items.length}, Matched: ${matchedCount}, Unmatched: ${unmatchedCount}`);
         updateSummary(id, items.length, matchedCount, unmatchedCount, false);
     });
 
@@ -240,7 +249,7 @@ export const createAccordionContent = (...accordionItems) => {
 
 export const updateSummary = (sectionId, totalCount, matchedCount, unmatchedCount, isTable = true) => {
     const summaryElement = document.querySelector(`#${sectionId} .summary`);
-    
+
     // Determina los textos y símbolos a mostrar basado en el parámetro isTable
     const matchedText = isTable ? `Skapa: ${matchedCount}` : `✔: ${matchedCount}`;
     const unmatchedText = isTable ? `No Skapa: ${unmatchedCount}` : `❌: ${unmatchedCount}`;
