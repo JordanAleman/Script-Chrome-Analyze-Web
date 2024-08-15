@@ -1,7 +1,7 @@
 // src/modules/uiUpdater.js
 import skapaJson from '../assets/skapa.json';
 import { formatString } from '../assets/utils';
-import { padItem } from '../components/fontSize.js';
+import { processColorItem, processFontSizeItem, sortMatchedItems } from './dataProcessing';
 
 // Mostrar el mensaje de "Sin Resultados" y ocultar el contenido
 export const showNoResultsMessage = (message) => {
@@ -201,54 +201,24 @@ export const createAccordionContent = (...accordionItems) => {
 
         // Separar ítems en matched y unmatched
         items.forEach(item => {
-            const isColor = title.includes("Color");
-            const isFontSize = title.includes("Size");
-            let matchName = '❌';
-            let processedItem = item;
+            let result;
+            if (title.includes("Color"))
+                result = processColorItem(item);
+            else if (title.includes("Size"))
+                result = processFontSizeItem(item);
 
-            if (isColor) {
-                const lowerCaseItem = item.toLowerCase();
-                const colorsLowerCase = Object.values(skapaJson.colors).map(color => color.toLowerCase());
-                if (colorsLowerCase.includes(lowerCaseItem)) {
-                    matchName = Object.keys(skapaJson.colors).find(key => skapaJson.colors[key].toLowerCase() === lowerCaseItem);
-                    processedItem = `${item} | ${matchName}`;
-                    matchedItems.push(processedItem);
-                } else {
-                    processedItem = `${item} | ❌`;
-                    unmatchedItems.push(processedItem);
-                }
-            } else if (isFontSize) {
-                const [, remValue] = item.split(' | ');
-                const match = Object.entries(skapaJson['font-sizes']).find(([name, value]) => `${value}rem` === remValue);
-                if (match) {
-                    matchName = match[0];
-                    processedItem = padItem(item, matchName); // Formatear y alinear tamaño de fuente
-                    matchedItems.push(processedItem);
-                } else {
-                    processedItem = `${item} | ❌`;
-                    unmatchedItems.push(processedItem);
-                }
-            }
+            if (result.isMatched)
+                matchedItems.push(result.processedItem);
+            else
+                unmatchedItems.push(result.processedItem);
         });
 
         // Ordenar los matchedItems
-        if (title.includes("Color")) {
-            matchedItems.sort((a, b) => {
-                const aName = a.split(' | ')[1];
-                const bName = b.split(' | ')[1];
-                return aName.localeCompare(bName);
-            });
-        } else if (title.includes("Size")) {
-            matchedItems.sort((a, b) => {
-                const aName = a.split(' | ')[1];
-                const bName = b.split(' | ')[1];
-                const fontSizeOrder = Object.keys(skapaJson['font-sizes']);
-                return fontSizeOrder.indexOf(aName) - fontSizeOrder.indexOf(bName);
-            });
-        }
+        const isColor = title.includes("Color");
+        const sortedMatchedItems = sortMatchedItems(matchedItems, isColor);
 
         // Crear el HTML para el acordeón con las dos listas separadas
-        return createAccordionItem(title, matchedItems, unmatchedItems);
+        return createAccordionItem(title, sortedMatchedItems, unmatchedItems);
     }).join('');
 
     accordionContainer.innerHTML = accordionHtml;
