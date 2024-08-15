@@ -4,7 +4,7 @@ import * as domUtils from './domUtils.js';
 import * as uiUpdater from './uiUpdater.js';
 import { updateSummary, updateImageSummary } from './summary.js';
 import * as tableCreators from './tableCreators.js';
-import * as accordionCreators from './accordionCreators.js';
+import * as accordionCreators from './Accordion/accordionCreators.js';
 
 let cachedResults = null;
 

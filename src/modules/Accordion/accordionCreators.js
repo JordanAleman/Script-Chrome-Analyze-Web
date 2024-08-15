@@ -1,9 +1,9 @@
 // src/modules/accordionCreators.js
 
-import skapaJson from '../assets/skapa.json';
-import { formatString } from '../assets/utils';
-import { processColorItem, processFontSizeItem, sortMatchedItems } from './dataProcessing';
-import { updateSummary } from './summary.js';
+import skapaJson from '../../assets/skapa.json';
+import { formatString } from '../../assets/utils.js';
+import { processColorItem, processFontSizeItem, sortMatchedItems } from './dataProcessing.js';
+import { updateSummary } from '../summary.js';
 
 // Función para crear el contenido del acordeón
 export const createAccordionContent = (...accordionItems) => {

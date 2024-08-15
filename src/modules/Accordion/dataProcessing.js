@@ -1,6 +1,6 @@
 // src/modules/dataProcessing.js
 
-import skapaJson from '../assets/skapa.json';
+import skapaJson from '../../assets/skapa.json';
 
 export const processColorItem = (item) => {
     const lowerCaseItem = item.toLowerCase();
@@ -34,6 +34,13 @@ export const processFontSizeItem = (item) => {
     return { processedItem, isMatched: matchName !== '❌' };
 };
 
+export const processImageItem = (item) => {
+    let processedItem = `${item.name} | ${item.alt}`;
+    let isMatched = item.alt !== '❌';
+
+    return { processedItem, isMatched };
+};
+
 // Función padItem para rellenar y alinear elementos acorde al tamaño del mayor
 export const padItem = (item, matchName) => {
     const [pxValue, remValue] = item.split(' | ');
@@ -55,15 +62,17 @@ export const sortMatchedItems = (items, isColor) => {
             const bName = b.split(' | ')[1];
             return aName.localeCompare(bName);
         });
+    } else if (isImage) {
+        return items.sort((a, b) => a.localeCompare(b));
     } else {
         return items.sort((a, b) => {
             const aName = a.split(' | ')[2];
             const bName = b.split(' | ')[2];
             const fontSizeOrder = Object.keys(skapaJson['font-sizes']);
-            
+
             // Ordenar de menor a mayor
             return fontSizeOrder.indexOf(aName) - fontSizeOrder.indexOf(bName);
         });
-        
+
     }
 };
