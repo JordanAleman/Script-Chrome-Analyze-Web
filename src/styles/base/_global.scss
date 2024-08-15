@@ -11,4 +11,8 @@ label {
 
 hr {
     margin: 3rem 0;
+
+    &:first-child {
+        margin-top: 1.5rem;
+    }
 }
