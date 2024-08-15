@@ -43,6 +43,9 @@ export const createColorRows = (colors, tableBody, maxColumns = 3) => {
         }
     });
 
+    // Ordenar colores coincidentes por el nombre del JSON
+    matchedColors.sort((a, b) => a.name.localeCompare(b.name));
+
     const addColorRow = (colors, isMatched) => {
         let rowHtml = `<tr>`;
         colors.forEach(item => {
@@ -113,6 +116,9 @@ export const createTable = (items, tableBody, headerId, maxColumns = 5) => {
             unmatchedSizes.push({ pxValue, remValue });
         }
     });
+
+    // Ordenar tamaños coincidentes por el nombre del JSON
+    matchedSizes.sort((a, b) => a.name.localeCompare(b.name));
 
     const addSizeRow = (sizes, isMatched) => {
         let rowHtml = '<tr>';

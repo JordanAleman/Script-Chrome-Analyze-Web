@@ -8,14 +8,17 @@
 
 .summary {
     display: flex;
-    margin-top: 1rem;
     border: 2px outset black;
     border-radius: 5px;
     font-size: 1rem;
     font-weight: bold;
 
-    &.summaryAccordion span {
-        width: 100%;
+    &.summaryAccordion {
+        margin-top: 1rem;
+
+        span {
+            width: 100%;
+        }
     }
 }
 
