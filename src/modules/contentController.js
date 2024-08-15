@@ -25,7 +25,7 @@ const toggleView = () => {
             // Crear filas de color y obtener conteos
             const colorCounts = uiUpdater.createColorRows(cachedResults.bgColors, tableBodyColors);
             const textColorCounts = uiUpdater.createColorRows(cachedResults.textColors, tableBodyTextColors);
-            const fontSizeCounts = uiUpdater.createTable(cachedResults.fontSizes, tableBodySizes, "fontSizeHeader");
+            const fontSizeCounts = uiUpdater.createTableSizes(cachedResults.fontSizes, tableBodySizes);
 
             // Actualizar resúmenes después de crear las filas
             uiUpdater.updateSummary("backgroundColorSection", colorCounts.totalCount, colorCounts.matchedCount, colorCounts.unmatchedCount);

@@ -1,6 +1,7 @@
 // src/modules/uiUpdater.js
 import skapaJson from '../assets/skapa.json';
 import { formatString } from '../assets/utils';
+import { padItem } from '../components/fontSize.js';
 
 // Mostrar el mensaje de "Sin Resultados" y ocultar el contenido
 export const showNoResultsMessage = (message) => {
@@ -99,7 +100,7 @@ export const createColorRows = (colors, tableBody, maxColumns = 3) => {
 };
 
 // Función para crear la tabla con elementos de tamaños de fuente
-export const createTable = (items, tableBody, headerId, maxColumns = 5) => {
+export const createTableSizes = (items, tableBody, maxColumns = 5) => {
     // Limpia el contenido existente en la tabla antes de agregar nuevas filas
     tableBody.innerHTML = '';
 
@@ -191,7 +192,35 @@ export const createAccordionContent = (...accordionItems) => {
         return itemHtml;
     };
 
-    const accordionHtml = accordionItems.map(([title, items]) => createAccordionItem(title, items)).join('');
+    const accordionHtml = accordionItems.map(([title, items]) => {
+        // Procesar ítems y determinar si son colores o tamaños de fuente
+        const processedItems = items.map(item => {
+            const isColor = title.includes("Color");
+            const isFontSize = title.includes("Size");
+            let matchName = '❌';
+            let processedItem = item;
+
+            if (isColor) {
+                const lowerCaseItem = item.toLowerCase();
+                const colorsLowerCase = Object.values(skapaJson.colors).map(color => color.toLowerCase());
+                if (colorsLowerCase.includes(lowerCaseItem)) {
+                    matchName = Object.keys(skapaJson.colors).find(key => skapaJson.colors[key].toLowerCase() === lowerCaseItem);
+                }
+                processedItem = `${item} | ${matchName}`;
+            } else if (isFontSize) {
+                const [, remValue] = item.split(' | ');
+                const match = Object.entries(skapaJson['font-sizes']).find(([name, value]) => `${value}rem` === remValue);
+                if (match) {
+                    matchName = match[0];
+                }
+                processedItem = padItem(item, matchName); // Formatear y alinear tamaño de fuente
+            }
+
+            return processedItem;
+        });
+
+        return createAccordionItem(title, processedItems);
+    }).join('');
 
     accordionContainer.innerHTML = accordionHtml;
 

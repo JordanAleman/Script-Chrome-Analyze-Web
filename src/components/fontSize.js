@@ -1,4 +1,4 @@
-// fontSize.js
+// src/components/fontSize.js
 import { pxToRem } from '../assets/utils.js';
 
 export const processFontSize = (element) => {
@@ -17,4 +17,17 @@ export const processFontSize = (element) => {
         return `${roundedPxValue}px | ${remValue}`;
     }
     return null;
+};
+
+// Función padItem para rellenar y alinear elementos acorde al tamaño del mayor
+export const padItem = (item, matchName) => {
+    const [pxValue, remValue] = item.split(' | ');
+
+    // Formatear remValue para que tenga tres decimales
+    const remNumber = parseFloat(remValue); // Convierte a número flotante
+    const formattedRem = remNumber.toFixed(3); // Asegura tres decimales
+
+    const paddedPx = pxValue.padStart(2, '0');
+
+    return `${paddedPx} | ${formattedRem} | ${matchName}`;
 };

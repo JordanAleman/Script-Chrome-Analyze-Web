@@ -2,7 +2,7 @@
 
 .accordion-results {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); // Ajuste dinámico
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // Ajuste dinámico
     width: 100%;
     padding: 1rem 0;
 }
@@ -35,5 +35,10 @@
     ul {
         margin: 0;
         padding: 1rem 1.5rem;
+    }
+
+    .panelContent {
+        font-family: monospace;
+        font-size: 12px;
     }
 }
