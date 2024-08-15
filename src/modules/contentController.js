@@ -19,6 +19,7 @@ const toggleView = () => {
                 ['Background Colors', cachedResults.bgColors],
                 ['Text Colors', cachedResults.textColors],
                 ['Font Sizes', cachedResults.fontSizes],
+                ['Image Alt', cachedResults.imageAlt],
             );
         } else {
             const tableBodyColors = document.getElementById("resultBackgroundColors");
@@ -32,7 +33,7 @@ const toggleView = () => {
             const fontSizeCounts = tableCreators.createTableSizes(cachedResults.fontSizes, tableBodySizes);
 
             // Crear tabla para imágenes
-            const imageCounts = tableCreators.createImageAltTable(cachedResults.images, tableBodyImages);
+            const imageCounts = tableCreators.createImageAltTable(cachedResults.imageAlt, tableBodyImages);
 
             // Actualizar resúmenes después de crear las filas
             updateSummary("backgroundColorSection", colorCounts.totalCount, colorCounts.matchedCount, colorCounts.unmatchedCount);
@@ -84,13 +85,13 @@ export const updatePopup = (selector, context) => {
             if (chrome.runtime.lastError) {
                 console.error('Error al recibir respuesta (っ °Д °;)っ:', chrome.runtime.lastError.message);
             } else if (response) {
-                const { bgColors, textColors, fontSizes, images, elementFound } = response;
+                const { bgColors, textColors, fontSizes, imageAlt, elementFound } = response;
 
                 if (elementFound === false) {
                     uiUpdater.showNoResultsMessage(`Element "${selector}" not found!`);
                 } else {
                     // Guardar resultados en caché
-                    cachedResults = { bgColors, textColors, fontSizes, images };
+                    cachedResults = { bgColors, textColors, fontSizes, imageAlt };
 
                     toggleView();
                 }

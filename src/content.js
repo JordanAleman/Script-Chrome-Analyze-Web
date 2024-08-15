@@ -57,16 +57,16 @@ const analyzePageStyles = (elements) => {
     };
 };
 
-const analyzePageImages = () => processImagesAlt();
+const analyzePageImagesAlt = () => processImagesAlt();
 
 // Listener para recibir mensajes del popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "analyzePage") {
         const styleResults = analyzePageStyles(document.querySelectorAll('*'));
-        const imageResults = analyzePageImages();
+        const imageAltResults = analyzePageImagesAlt();
         sendResponse({
             ...styleResults,
-            images: imageResults // Array de imágenes con sus atributos alt y src
+            imageAlt: imageAltResults // Array de imágenes con sus atributos alt y src
         });
     }
 
@@ -76,11 +76,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             const elements = element.querySelectorAll('*');
             const allElements = [element, ...elements]; // Incluir el elemento en sí y todos sus hijos
             const styleResults = analyzePageStyles(allElements);
-            const imageResults = analyzePageImages();
+            const imageAltResults = analyzePageImagesAlt();
             styleResults.elementFound = true;
             sendResponse({
                 ...styleResults,
-                images: imageResults
+                imageAlt: imageAltResults
             });
         } else {
             sendResponse({ elementFound: false });
@@ -91,11 +91,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const elements = document.querySelectorAll(message.selector);
         if (elements.length > 0) {
             const styleResults = analyzePageStyles(elements);
-            const imageResults = analyzePageImages();
+            const imageAltResults = analyzePageImagesAlt();
             styleResults.elementFound = true;
             sendResponse({
                 ...styleResults,
-                images: imageResults
+                imageAlt: imageAltResults
             });
         } else {
             sendResponse({ elementFound: false });

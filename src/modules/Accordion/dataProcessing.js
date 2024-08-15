@@ -35,8 +35,11 @@ export const processFontSizeItem = (item) => {
 };
 
 export const processImageItem = (item) => {
-    let processedItem = `${item.name} | ${item.alt}`;
     let isMatched = item.alt !== '❌';
+    let processedItem =
+        isMatched
+            ? `<strong>Name:</strong> ${item.name} <br><strong>Alt:</strong> ${item.alt}`
+            : `${item.name} | ${item.alt}`;
 
     return { processedItem, isMatched };
 };
@@ -55,7 +58,7 @@ export const padItem = (item, matchName) => {
 };
 
 
-export const sortMatchedItems = (items, isColor) => {
+export const sortMatchedItems = (items, isColor, isImage) => {
     if (isColor) {
         return items.sort((a, b) => {
             const aName = a.split(' | ')[1];

@@ -2,7 +2,7 @@
 
 import skapaJson from '../../assets/skapa.json';
 import { formatString } from '../../assets/utils.js';
-import { processColorItem, processFontSizeItem, sortMatchedItems } from './dataProcessing.js';
+import { processColorItem, processFontSizeItem, processImageItem, sortMatchedItems } from './dataProcessing.js';
 import { updateSummary } from '../summary.js';
 
 // Función para crear el contenido del acordeón
@@ -35,10 +35,13 @@ export const createAccordionContent = (...accordionItems) => {
         // Separar ítems en matched y unmatched
         items.forEach(item => {
             let result;
-            if (title.includes("Color"))
+            if (title.includes("Color")) {
                 result = processColorItem(item);
-            else if (title.includes("Size"))
+            } else if (title.includes("Size")) {
                 result = processFontSizeItem(item);
+            } else if (title.includes("Image Alt")) { // Comprobación para imágenes
+                result = processImageItem(item);
+            }
 
             if (result.isMatched)
                 matchedItems.push(result.processedItem);
@@ -48,7 +51,8 @@ export const createAccordionContent = (...accordionItems) => {
 
         // Ordenar los matchedItems
         const isColor = title.includes("Color");
-        const sortedMatchedItems = sortMatchedItems(matchedItems, isColor);
+        const isImage = title.includes("Image Alt");
+        const sortedMatchedItems = sortMatchedItems(matchedItems, isColor, isImage);
 
         // Crear el HTML para el acordeón con las dos listas separadas
         return createAccordionItem(title, sortedMatchedItems, unmatchedItems);
@@ -81,6 +85,7 @@ export const createAccordionContent = (...accordionItems) => {
         items.forEach(item => {
             const isColor = id.includes("Color");
             const isFontSize = id.includes("Size");
+            const isImage = id.includes("imageAlt");
             let isMatched = false;
 
             if (isColor) {
@@ -91,6 +96,8 @@ export const createAccordionContent = (...accordionItems) => {
                 const [, remValue] = item.split(' | ');
                 const remValueLowerCase = remValue.toLowerCase();
                 isMatched = Object.values(skapaJson['font-sizes']).some(value => `${value}rem`.toLowerCase() === remValueLowerCase);
+            } else if (isImage) {
+                isMatched = item.alt !== '❌'; // Comprobación directa del alt
             }
 
             if (isMatched) {
@@ -103,4 +110,3 @@ export const createAccordionContent = (...accordionItems) => {
         updateSummary(id, items.length, matchedCount, unmatchedCount, false);
     });
 };
-
