@@ -14,6 +14,16 @@ export const rgbStringToArray = rgb => {
 
 export const pxToRem = (px, base = 16) => {
     const remValue = parseFloat(px) / base;
-    return parseFloat(remValue.toFixed(2)) + 'rem';
+    return parseFloat(remValue.toFixed(3)) + 'rem';
 };
 
+
+export const formatString = (input, suffix) => {
+    // Elimina los espacios del string
+    const noSpaces = input.replace(/\s+/g, '');
+    
+    // Convierte la primera letra a minúscula
+    const formatted = noSpaces.charAt(0).toLowerCase() + noSpaces.slice(1);
+    
+    return formatted + suffix;
+};

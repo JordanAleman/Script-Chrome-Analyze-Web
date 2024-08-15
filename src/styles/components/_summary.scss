@@ -12,6 +12,10 @@
     border-radius: 5px;
     font-size: 1rem;
     font-weight: bold;
+
+    &.summaryAccordion span {
+        width: 100%;
+    }
 }
 
 .summary span {
@@ -22,7 +26,7 @@
     background-color: #D1ECF1;
 }
 
-.summarySkaoa {
+.summarySkapa {
     background-color: #D4EDDA;
 }
 

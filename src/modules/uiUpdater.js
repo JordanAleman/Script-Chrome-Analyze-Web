@@ -1,5 +1,6 @@
 // src/modules/uiUpdater.js
 import colorsJson from '../assets/skapa.json';
+import { formatString } from '../assets/utils';
 
 // Mostrar el mensaje de "Sin Resultados" y ocultar el contenido
 export const showNoResultsMessage = (message) => {
@@ -171,9 +172,10 @@ export const createAccordionContent = (...accordionItems) => {
 
     const createAccordionItem = (title, items) => {
         const itemHtml = `
-            <div class="accordion-item">
+            <div id="${formatString(title, 'Accordion')}" class="accordion-item">
                 <button class="accordion">${title}</button>
                 <div class="panel">
+                    <div class="summary summaryAccordion"></div>
                     <ul class="panelContent">
                         ${items.map(i => `<li>${i}</li>`).join('')}
                     </ul>
@@ -204,15 +206,50 @@ export const createAccordionContent = (...accordionItems) => {
         });
     });
 
-    accordionContainer.style.display = 'flex';
+    // Actualizar el resumen después de crear el acordeón
+    accordionItems.forEach(([ title, items ]) => {
+        let matchedCount = 0;
+        let unmatchedCount = 0;
+        let id = formatString(title, 'Accordion'); 
+
+        items.forEach(item => {
+            const isColor = id.includes("Color");
+            const isFontSize = id.includes("FontSize");
+            let isMatched = false;
+
+            if (isColor) {
+                // Comparar colores
+                isMatched = Object.values(colorsJson.colors).includes(item.toLowerCase());
+            } else if (isFontSize) {
+                // Comparar tamaños de fuente
+                const [pxValue, remValue] = item.split(' | ');
+                isMatched = Object.values(colorsJson['font-sizes']).some(value => `${value}rem` === remValue);
+            }
+
+            if (isMatched) {
+                matchedCount++;
+            } else {
+                unmatchedCount++;
+            }
+        });
+
+        updateSummary(id, items.length, matchedCount, unmatchedCount, false);
+    });
+
 };
 
-export const updateSummary = (sectionId, totalCount, matchedCount, unmatchedCount) => {
+export const updateSummary = (sectionId, totalCount, matchedCount, unmatchedCount, isTable = true) => {
     const summaryElement = document.querySelector(`#${sectionId} .summary`);
+    
+    // Determina los textos y símbolos a mostrar basado en el parámetro isTable
+    const matchedText = isTable ? `Skapa: ${matchedCount}` : `✔: ${matchedCount}`;
+    const unmatchedText = isTable ? `No Skapa: ${unmatchedCount}` : `❌: ${unmatchedCount}`;
+
+    // Actualiza el contenido del elemento summary
     summaryElement.innerHTML = `
         <span class="summaryInfo">Nº: ${totalCount}</span>
-        <span class="summarySkaoa">Skapa: ${matchedCount}</span>  
-        <span class="summaryNoSkapa">No Skapa: ${unmatchedCount}</span>
+        <span class="summarySkapa">${matchedText}</span>  
+        <span class="summaryNoSkapa">${unmatchedText}</span>
     `;
 };
 
