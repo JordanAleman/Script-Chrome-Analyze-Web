@@ -13,7 +13,7 @@ export const processImagesAlt = () => {
         const alt = img.alt.trim();
         const name = src.substring(src.lastIndexOf('/') + 1);
         const hasAlt = alt.length > 0;
-        
+
         results.push({
             src,
             name,
@@ -22,4 +22,29 @@ export const processImagesAlt = () => {
     });
 
     return results;
+};
+
+export const imageAltStructure = () => {
+    let resultsShow = document.querySelector('#resultsShow');
+    resultsShow.innerHTML = `
+        <div id="imageAltSection" class="resultsContainer">
+            <div class="containerResult">
+                <h2>Image Alt Attributes</h2>
+                <div class="summary"></div>
+            </div>
+            <div class="tableContainer">
+                <table id="imageAltTable">
+                    <thead>
+                        <tr>
+                            <th>Src</th>
+                            <th>Name</th>
+                            <th>Alt</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultImageAlts"></tbody>
+                </table>
+            </div>
+        </div>
+    `;
+    return document.getElementById("resultImageAlts");
 };

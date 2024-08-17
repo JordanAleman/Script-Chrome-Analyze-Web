@@ -1,5 +1,10 @@
 // src/modules/contentController.js
 
+import { bgColorStructure } from '../components/Styles/bgColor.js';
+import { colorStructure } from '../components/Styles/color.js';
+import { fontSizeStructure } from '../components/Styles/fontSize.js';
+import { imageAltStructure } from '../components/Accessibility/imageAlt.js';
+
 import * as domUtils from './domUtils.js';
 import * as uiUpdater from './uiUpdater.js';
 import { updateSummary, updateImageSummary } from './summary.js';
@@ -11,6 +16,15 @@ let cachedResults = null;
 const toggleViewButton = document.querySelector('.switch input');
 
 const toggleView = () => {
+    const analyzeContent = document.querySelector('#analyzeContent');
+
+    if (analyzeContent.style.display != 'none') analyzeContent.style.display = 'none';
+
+    const selectedRadio = document.querySelector('.resultsChooseShow input[type="radio"]:checked');
+    if (!selectedRadio) return;
+
+    const selectedValue = selectedRadio.parentElement.textContent.trim();
+
     const isAccordionView = toggleViewButton.checked;
 
     if (cachedResults) {
@@ -22,26 +36,7 @@ const toggleView = () => {
                 ['Image Alt', cachedResults.imageAlt],
             );
         } else {
-            const tableBodyColors = document.getElementById("resultBackgroundColors");
-            const tableBodyTextColors = document.getElementById("resultTextColors");
-            const tableBodySizes = document.getElementById("resultFontSizes");
-            const tableBodyImages = document.getElementById("resultImagesAlt");
-
-            // Crear filas de color y obtener conteos
-            const colorCounts = tableCreators.createColorRows(cachedResults.bgColors, tableBodyColors);
-            const textColorCounts = tableCreators.createColorRows(cachedResults.textColors, tableBodyTextColors);
-            const fontSizeCounts = tableCreators.createTableSizes(cachedResults.fontSizes, tableBodySizes);
-
-            // Crear tabla para imágenes
-            const imageCounts = tableCreators.createImageAltTable(cachedResults.imageAlt, tableBodyImages);
-
-            // Actualizar resúmenes después de crear las filas
-            updateSummary("backgroundColorSection", colorCounts.totalCount, colorCounts.matchedCount, colorCounts.unmatchedCount);
-            updateSummary("textColorSection", textColorCounts.totalCount, textColorCounts.matchedCount, textColorCounts.unmatchedCount);
-            updateSummary("fontSizeSection", fontSizeCounts.totalCount, fontSizeCounts.matchedCount, fontSizeCounts.unmatchedCount);
-
-            // Actualizar resumen de imágenes
-            updateImageSummary("imageAltSection", imageCounts.totalImages, imageCounts.imagesWithAlt, imageCounts.imagesWithoutAlt);
+            updateTableAndSummary(selectedValue, cachedResults);
         }
 
         uiUpdater.showResults();
@@ -50,6 +45,15 @@ const toggleView = () => {
 
 
 toggleViewButton.addEventListener('change', toggleView);
+
+const updateRadioButtonSelection = () => {
+    const radioButtons = document.querySelectorAll('.resultsChooseShow input[type="radio"]');
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', toggleView);
+    });
+};
+
+updateRadioButtonSelection();
 
 export const updatePopup = (selector, context) => {
     domUtils.cleanContent();
@@ -99,3 +103,38 @@ export const updatePopup = (selector, context) => {
         });
     });
 };
+
+const updateTableAndSummary = (selectedValue, cachedResults) => {
+    let tableBody;
+    let counts;
+
+    switch (selectedValue) {
+        case 'bgColor':
+            tableBody = bgColorStructure();
+            counts = tableCreators.createColorRows(cachedResults.bgColors, tableBody);
+            updateSummary("backgroundColorSection", counts.totalCount, counts.matchedCount, counts.unmatchedCount);
+            break;
+
+        case 'color':
+            tableBody = colorStructure();
+            counts = tableCreators.createColorRows(cachedResults.textColors, tableBody);
+            updateSummary("textColorSection", counts.totalCount, counts.matchedCount, counts.unmatchedCount);
+            break;
+
+        case 'fontSize':
+            tableBody = fontSizeStructure();
+            counts = tableCreators.createTableSizes(cachedResults.fontSizes, tableBody);
+            updateSummary("fontSizeSection", counts.totalCount, counts.matchedCount, counts.unmatchedCount);
+            break;
+
+        case 'imageAlt':
+            tableBody = imageAltStructure();
+            counts = tableCreators.createImageAltTable(cachedResults.imageAlt, tableBody);
+            updateImageSummary("imageAltSection", counts.totalImages, counts.imagesWithAlt, counts.imagesWithoutAlt);
+            break;
+
+        default:
+            console.warn(`Unknown selection: ${selectedValue}`);
+            break;
+    }
+}

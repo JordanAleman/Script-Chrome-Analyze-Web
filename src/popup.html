@@ -19,7 +19,7 @@
 			</div>
 		</header>
 		<main class="main">
-			<div class="analyzeContent">
+			<div id="analyzeContent" class="analyzeContent">
 				<div class="analyzeContentSearch">
 					<span>Analyze all page <br />(Max 100 elements)</span>
 					<button id="analyzeButton" class="buttonAnalyze">
@@ -74,133 +74,42 @@
 					<h2>Choose to show</h2>
 					<h3>Styles</h3>
 					<div class="radioButtonContainer">
-						<label class="container"
-							>bgColor
-							<input
-								type="radio"
-								checked="checked"
-								name="radio"
-							/>
+						<label class="container">
+							bgColor
+							<input type="radio" value="bgColor" name="radio" checked="checked" />
 							<span class="checkmark"></span>
 						</label>
-						<label class="container"
-							>color
-							<input type="radio" name="radio" />
+						<label class="container">
+							color
+							<input type="radio" value="color" name="radio" />
 							<span class="checkmark"></span>
 						</label>
-						<label class="container"
-							>fontSize
-							<input type="radio" name="radio" />
+						<label class="container">
+							fontSize
+							<input type="radio" value="fontSize" name="radio" />
 							<span class="checkmark"></span>
 						</label>
 					</div>
-
-					<h3>Accesibility</h3>
+				
+					<h3>Accessibility</h3>
 					<div class="radioButtonContainer">
-						<label class="container"
-							>imageAlt
-							<input
-								type="radio"
-								checked="checked"
-								name="radio"
-							/>
+						<label class="container">
+							imageAlt
+							<input type="radio" value="imageAlt" name="radio" />
 							<span class="checkmark"></span>
 						</label>
-						<label class="container"
-							>aAlt
-							<input type="radio" name="radio" />
+						<label class="container">
+							aAlt
+							<input type="radio" value="aAlt" name="radio" />
 							<span class="checkmark"></span>
 						</label>
 					</div>
 				</div>
+				
 
 				<hr />
 
-				<section class="resultsShow">
-					<div class="resultsContainer">
-						<div
-							id="backgroundColorSection"
-							class="containerResult"
-						>
-							<h2>Used Background Colors (HEX)</h2>
-							<div class="summary"></div>
-						</div>
-						<div class="tableContainer">
-							<table id="bgColorsTable">
-								<thead>
-									<tr>
-										<th>Color</th>
-										<th>HEX</th>
-										<th>Skapa name</th>
-									</tr>
-								</thead>
-								<tbody id="resultBackgroundColors"></tbody>
-							</table>
-						</div>
-					</div>
-
-					<hr />
-
-					<div class="resultsContainer">
-						<div id="textColorSection" class="containerResult">
-							<h2>Used Colors (HEX)</h2>
-							<div class="summary"></div>
-						</div>
-						<div class="tableContainer">
-							<table id="textColorsTable">
-								<thead>
-									<tr>
-										<th>Color</th>
-										<th>HEX</th>
-										<th>Skapa name</th>
-									</tr>
-								</thead>
-								<tbody id="resultTextColors"></tbody>
-							</table>
-						</div>
-					</div>
-
-					<hr />
-
-					<div class="resultsContainer">
-						<div id="fontSizeSection" class="containerResult">
-							<h2>Used Font Sizes (REM)</h2>
-							<div class="summary"></div>
-						</div>
-						<div class="tableContainer">
-							<table id="fontSizesTable">
-								<thead>
-									<tr>
-										<th id="fontSizeHeader" colspan="1">
-											Font Size
-										</th>
-									</tr>
-								</thead>
-								<tbody id="resultFontSizes"></tbody>
-							</table>
-						</div>
-					</div>
-
-					<hr />
-
-					<div class="resultsContainer">
-						<div id="imageAltSection" class="containerResult">
-							<h2>Image with Alt</h2>
-							<div class="summary"></div>
-						</div>
-						<div class="tableContainer">
-							<table id="imageAltTable">
-								<thead>
-									<tr>
-										<th>Src</th>
-										<th>Name</th>
-										<th>Alt</th>
-									</tr>
-								</thead>
-								<tbody id="resultImagesAlt"></tbody>
-							</table>
-						</div>
-					</div>
+				<section id="resultsShow">
 				</section>
 			</div>
 
