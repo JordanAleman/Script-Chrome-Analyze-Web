@@ -1,5 +1,5 @@
 // bgColor.js
-import { rgbStringToArray, rgbArrayToHex } from '../assets/utils.js';
+import { rgbStringToArray, rgbArrayToHex } from '../../assets/utils.js';
 
 export const processBackgroundColor = (element) => {
     let bgColor = window.getComputedStyle(element).backgroundColor;

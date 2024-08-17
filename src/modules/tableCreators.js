@@ -63,7 +63,7 @@ export const createColorRows = (colors, tableBody, maxColumns = 3) => {
 
     // Añadir un margen entre tablas
     if (unmatchedColors.length > 0) {
-        tableBody.innerHTML += `<tr><td class="tableSeparator" colspan="${maxColumns * 3}">.·´¯\`(&gt;▂&lt;)´¯\`·.</td></tr>`;
+        tableBody.innerHTML += `<tr><td class="tableSeparator" colspan="${maxColumns * 3}"></td></tr>`;
     }
 
     // Crear tabla para colores no coincidentes
@@ -137,7 +137,7 @@ export const createTableSizes = (items, tableBody, maxColumns = 5) => {
 
     // Añadir un margen entre tablas
     if (unmatchedSizes.length > 0) {
-        tableBody.innerHTML += `<tr><td class="tableSeparator" colspan="${maxColumns}">.·´¯\`(&gt;▂&lt;)´¯\`·.</td></tr>`;
+        tableBody.innerHTML += `<tr><td class="tableSeparator" colspan="${maxColumns}"></td></tr>`;
     }
 
     // Crear tabla para tamaños no coincidentes

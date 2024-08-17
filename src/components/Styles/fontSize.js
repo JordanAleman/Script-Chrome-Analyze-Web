@@ -1,5 +1,5 @@
 // src/components/fontSize.js
-import { pxToRem } from '../assets/utils.js';
+import { pxToRem } from '../../assets/utils.js';
 
 export const processFontSize = (element) => {
     let fontSize = window.getComputedStyle(element).fontSize;

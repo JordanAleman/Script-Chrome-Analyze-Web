@@ -1,8 +1,8 @@
 // src/content.js
-import { processBackgroundColor } from './components/bgColor.js';
-import { processTextColor } from './components/color.js';
-import { processFontSize } from './components/fontSize.js';
-import { processImagesAlt } from './components/imageAlt.js';
+import { processBackgroundColor } from './components/Styles/bgColor.js';
+import { processTextColor } from './components/Styles/color.js';
+import { processFontSize } from './components/Styles/fontSize.js';
+import { processImagesAlt } from './components/Accessibility/imageAlt.js';
 
 // Función auxiliar para procesar los estilos de un solo elemento
 const processElementStyles = (element, sets, maxResults) => {
