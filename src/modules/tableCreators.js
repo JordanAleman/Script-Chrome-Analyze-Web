@@ -196,3 +196,24 @@ export const createImageAltTable = (images, tableBody) => {
         imagesWithoutAlt
     };
 };
+
+export const createAArialsTable = (aArials, tableBody) => {
+    let totalAArials = 0;
+    let withAriaLabel = 0;
+    let withoutAriaLabel = 0;
+
+    aArials.forEach(a => {
+        totalAArials++;
+        const row = tableBody.insertRow();
+        row.insertCell(0).textContent = a.href;
+        row.insertCell(1).textContent = a.ariaLabel;
+
+        if (a.ariaLabel !== '❌') {
+            withAriaLabel++;
+        } else {
+            withoutAriaLabel++;
+        }
+    });
+
+    return { totalAArials, withAriaLabel, withoutAriaLabel };
+};

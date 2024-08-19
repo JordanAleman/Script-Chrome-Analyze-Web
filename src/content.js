@@ -3,6 +3,8 @@ import { processBackgroundColor } from './components/Styles/bgColor.js';
 import { processTextColor } from './components/Styles/color.js';
 import { processFontSize } from './components/Styles/fontSize.js';
 import { processImagesAlt } from './components/Accessibility/imageAlt.js';
+import { processAElements } from './components/Accessibility/aArial.js';
+
 
 // Función auxiliar para procesar los estilos de un solo elemento
 const processElementStyles = (element, sets, maxResults) => {
@@ -58,15 +60,19 @@ const analyzePageStyles = (elements) => {
 };
 
 const analyzePageImagesAlt = () => processImagesAlt();
+const analyzePageAElements = () => processAElements();
+
 
 // Listener para recibir mensajes del popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "analyzePage") {
         const styleResults = analyzePageStyles(document.querySelectorAll('*'));
         const imageAltResults = analyzePageImagesAlt();
+        const aArialResults = analyzePageAElements();
         sendResponse({
             ...styleResults,
-            imageAlt: imageAltResults // Array de imágenes con sus atributos alt y src
+            imageAlt: imageAltResults, // Array de imágenes con sus atributos alt y src
+            aArials: aArialResults
         });
     }
 
@@ -77,10 +83,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             const allElements = [element, ...elements]; // Incluir el elemento en sí y todos sus hijos
             const styleResults = analyzePageStyles(allElements);
             const imageAltResults = analyzePageImagesAlt();
+            const aArialResults = analyzePageAElements();
             styleResults.elementFound = true;
             sendResponse({
                 ...styleResults,
-                imageAlt: imageAltResults
+                imageAlt: imageAltResults,
+                aArials: aArialResults
             });
         } else {
             sendResponse({ elementFound: false });
@@ -92,10 +100,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (elements.length > 0) {
             const styleResults = analyzePageStyles(elements);
             const imageAltResults = analyzePageImagesAlt();
+            const aArialResults = analyzePageAElements();
             styleResults.elementFound = true;
             sendResponse({
                 ...styleResults,
-                imageAlt: imageAltResults
+                imageAlt: imageAltResults,
+                aArials: aArialResults
             });
         } else {
             sendResponse({ elementFound: false });

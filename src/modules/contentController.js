@@ -4,6 +4,7 @@ import { bgColorStructure } from '../components/Styles/bgColor.js';
 import { colorStructure } from '../components/Styles/color.js';
 import { fontSizeStructure } from '../components/Styles/fontSize.js';
 import { imageAltStructure } from '../components/Accessibility/imageAlt.js';
+import { aArialStructure } from '../components/Accessibility/aArial.js';
 
 import * as domUtils from './domUtils.js';
 import * as uiUpdater from './uiUpdater.js';
@@ -89,13 +90,13 @@ export const updatePopup = (selector, context) => {
             if (chrome.runtime.lastError) {
                 console.error('Error al recibir respuesta (っ °Д °;)っ:', chrome.runtime.lastError.message);
             } else if (response) {
-                const { bgColors, textColors, fontSizes, imageAlt, elementFound } = response;
+                const { bgColors, textColors, fontSizes, imageAlt, aArials, elementFound } = response;
 
                 if (elementFound === false) {
                     uiUpdater.showNoResultsMessage(`Element "${selector}" not found!`);
                 } else {
                     // Guardar resultados en caché
-                    cachedResults = { bgColors, textColors, fontSizes, imageAlt };
+                    cachedResults = { bgColors, textColors, fontSizes, imageAlt, aArials };
 
                     toggleView();
                 }
@@ -131,6 +132,12 @@ const updateTableAndSummary = (selectedValue, cachedResults) => {
             tableBody = imageAltStructure();
             counts = tableCreators.createImageAltTable(cachedResults.imageAlt, tableBody);
             updateImageSummary("imageAltSection", counts.totalImages, counts.imagesWithAlt, counts.imagesWithoutAlt);
+            break;
+
+        case 'aArial':
+            tableBody = aArialStructure();
+            counts = tableCreators.createAArialsTable(cachedResults.aArials, tableBody);
+            updateImageSummary("aArialSection", counts.totalAArials, counts.withAriaLabel, counts.withoutAriaLabel);
             break;
 
         default:
