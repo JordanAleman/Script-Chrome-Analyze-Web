@@ -26,8 +26,8 @@ export const updateImageSummary = (sectionId, totalImages, imagesWithAlt, images
     const summaryElement = document.getElementById(sectionId).querySelector('.summary');
 
     // Determina los textos y símbolos a mostrar basado en el parámetro isTable
-    const matchedText = isTable ? `With Alt: ${imagesWithAlt}` : `✔: ${matchedCount}`;
-    const unmatchedText = isTable ? `Without Alt: ${imagesWithoutAlt}` : `❌: ${unmatchedCount}`;
+    const matchedText = isTable ? `Matches: ${imagesWithAlt}` : `✔: ${matchedCount}`;
+    const unmatchedText = isTable ? `Unmatches: ${imagesWithoutAlt}` : `❌: ${unmatchedCount}`;
 
     // Actualiza el contenido del elemento summary
     summaryElement.innerHTML = `
