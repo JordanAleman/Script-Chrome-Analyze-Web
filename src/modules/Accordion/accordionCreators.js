@@ -1,9 +1,24 @@
 // src/modules/accordionCreators.js
 
-import skapaJson from '../../assets/skapa.json';
+import * as dataProcessing from './dataProcessing.js';
 import { formatString } from '../../assets/utils.js';
-import { processColorItem, processFontSizeItem, processImageItem, sortMatchedItems } from './dataProcessing.js';
 import { updateSummary } from '../summary.js';
+
+const processingFunctions = {
+    'Background Colors': dataProcessing.processColorItem,
+    'Text Colors': dataProcessing.processColorItem,
+    'Font Sizes': dataProcessing.processFontSizeItem,
+    'Image Alt': dataProcessing.processImageItem,
+    'Anchor Aria Labels': dataProcessing.processAArialItem
+};
+
+const verificationFunctions = {
+    'Background Colors': dataProcessing.isColorMatched,
+    'Text Colors': dataProcessing.isColorMatched,
+    'Font Sizes': dataProcessing.isFontSizeMatched,
+    'Image Alt': dataProcessing.isImageMatched,
+    'Anchor Aria Labels': dataProcessing.isAArialMatched
+};
 
 // Función para crear el contenido del acordeón
 export const createAccordionContent = (...accordionItems) => {
@@ -32,27 +47,23 @@ export const createAccordionContent = (...accordionItems) => {
         const matchedItems = [];
         const unmatchedItems = [];
 
-        // Separar ítems en matched y unmatched
-        items.forEach(item => {
-            let result;
-            if (title.includes("Color")) {
-                result = processColorItem(item);
-            } else if (title.includes("Size")) {
-                result = processFontSizeItem(item);
-            } else if (title.includes("Image Alt")) { // Comprobación para imágenes
-                result = processImageItem(item);
-            }
+        const processItem = processingFunctions[title];
 
-            if (result.isMatched)
-                matchedItems.push(result.processedItem);
-            else
-                unmatchedItems.push(result.processedItem);
-        });
+        if (processItem) {
+            items.forEach(item => {
+                let result = processItem(item);
+                if (result.isMatched) {
+                    matchedItems.push(result.processedItem);
+                } else {
+                    unmatchedItems.push(result.processedItem);
+                }
+            });
+        }
 
         // Ordenar los matchedItems
-        const isColor = title.includes("Color");
-        const isImage = title.includes("Image Alt");
-        const sortedMatchedItems = sortMatchedItems(matchedItems, isColor, isImage);
+        const byName = title.includes("Color");
+        const byJson = title.includes("Image Alt");
+        const sortedMatchedItems = dataProcessing.sortMatchedItems(matchedItems, byName, byJson);
 
         // Crear el HTML para el acordeón con las dos listas separadas
         return createAccordionItem(title, sortedMatchedItems, unmatchedItems);
@@ -83,21 +94,11 @@ export const createAccordionContent = (...accordionItems) => {
         let id = formatString(title, 'Accordion');
 
         items.forEach(item => {
-            const isColor = id.includes("Color");
-            const isFontSize = id.includes("Size");
-            const isImage = id.includes("imageAlt");
+            const verifyItem = verificationFunctions[title];
             let isMatched = false;
 
-            if (isColor) {
-                const lowerCaseItem = item.toLowerCase();
-                const colorsLowerCase = Object.values(skapaJson.colors).map(color => color.toLowerCase());
-                isMatched = colorsLowerCase.includes(lowerCaseItem);
-            } else if (isFontSize) {
-                const [, remValue] = item.split(' | ');
-                const remValueLowerCase = remValue.toLowerCase();
-                isMatched = Object.values(skapaJson['font-sizes']).some(value => `${value}rem`.toLowerCase() === remValueLowerCase);
-            } else if (isImage) {
-                isMatched = item.alt !== '❌'; // Comprobación directa del alt
+            if (verifyItem) {
+                isMatched = verifyItem(item);
             }
 
             if (isMatched) {

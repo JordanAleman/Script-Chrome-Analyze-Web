@@ -35,6 +35,7 @@ const toggleView = () => {
                 ['Text Colors', cachedResults.textColors],
                 ['Font Sizes', cachedResults.fontSizes],
                 ['Image Alt', cachedResults.imageAlt],
+                ['Anchor Aria Labels', cachedResults.aArials]
             );
         } else {
             updateTableAndSummary(selectedValue, cachedResults);

@@ -10,8 +10,8 @@ export const updateSummary = (sectionId, totalCount, matchedCount, unmatchedCoun
     // Actualiza el contenido del elemento summary
     summaryElement.innerHTML = `
         <span class="summaryInfo">Nº: ${totalCount}</span>
-        <span class="summarySkapa">${matchedText}</span>  
-        <span class="summaryNoSkapa">${unmatchedText}</span>
+        <span class="summaryMatch">${matchedText}</span>  
+        <span class="summaryNoMatch">${unmatchedText}</span>
     `;
 };
 
@@ -32,7 +32,7 @@ export const updateImageSummary = (sectionId, totalImages, imagesWithAlt, images
     // Actualiza el contenido del elemento summary
     summaryElement.innerHTML = `
         <span class="summaryInfo">Total Images: ${totalImages}</span>
-        <span class="summarySkapa">${matchedText}</span>  
-        <span class="summaryNoSkapa">${unmatchedText}</span>
+        <span class="summaryMatch">${matchedText}</span>  
+        <span class="summaryNoMatch">${unmatchedText}</span>
     `;
 };
