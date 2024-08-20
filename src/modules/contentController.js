@@ -17,10 +17,6 @@ let cachedResults = null;
 const toggleViewButton = document.querySelector('.switch input');
 
 const toggleView = () => {
-    const analyzeContent = document.querySelector('#analyzeContent');
-
-    if (analyzeContent.style.display != 'none') analyzeContent.style.display = 'none';
-
     const selectedRadio = document.querySelector('.resultsChooseShow input[type="radio"]:checked');
     if (!selectedRadio) return;
 
@@ -100,6 +96,10 @@ export const updatePopup = (selector, context) => {
                     cachedResults = { bgColors, textColors, fontSizes, imageAlt, aArials };
 
                     toggleView();
+
+                    const analyzeContent = document.querySelector('#analyzeContent');
+
+                    if (analyzeContent.style.display != 'none') analyzeContent.style.display = 'none';
                 }
             }
         });

@@ -1,67 +1,70 @@
 // /styles/components/_accordion.scss
 
 .accordion-results {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // Ajuste dinámico
-    width: 100%;
-    padding: 1rem 0;
+	display: grid;
+	grid-template-columns: repeat(
+		auto-fit,
+		minmax(250px, 1fr)
+	); 
+	width: 100%;
+	padding: 1rem 0;
 }
 
 .accordion {
-    background-color: #0a6abd;
-    color: white;
-    border-color: transparent;
-    cursor: pointer;
-    padding: 0.5rem;
-    width: 100%;
-    font-weight: bold;
-    text-align: start;
-    transition: background-color 0.4s, color 0.4s;
-    display: block; // Asegurar que ocupen todo el espacio disponible
+	display: block; 
+	background-color: #0077c8;
+	color: white;
+	border-color: transparent;
+	cursor: pointer;
+	padding: 0.5rem;
+	width: 100%;
+	font-weight: bold;
+	text-align: start;
+	transition: background-color 0.4s, color 0.4s;
 }
 
 .accordion.active,
 .accordion:hover {
-    background-color: #064f8e;
+	background-color: #064f8e;
 }
 
 .panel {
-    padding: 0 0.4rem;
-    background-color: #f1f1f1;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-out;
+	padding: 0 0.4rem;
+	background-color: #f5f5f5;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.4s ease-out;
 
-    ul {
-        margin: 0;
-        padding: 1rem 1.5rem;
-    }
+	ul {
+		margin: 0;
+		padding: 1rem 1.5rem;
+	}
 
-    .panelContentMatched,
-    .panelContentUnmatched {
-        font-family: monospace;
-        font-size: 12px;
-    }
+	.panelContentMatched,
+	.panelContentUnmatched {
+		font-family: monospace;
+		font-size: 12px;
+	}
 }
 
 /* --------------------------------- Special -------------------------------- */
 #fontSizesAccordion,
 #imageAltAccordion,
 #anchorAriaLabelsAccordion {
-    grid-column: span 2;
+	grid-column: span 2;
 }
 
 #fontSizesAccordion {
-    .panel {
-        display: flex;
-        flex-wrap: wrap;
+	.panel {
+		display: flex;
+		flex-wrap: wrap;
 
-        .summary {
-            width: 100%;
-        }
+		.summary {
+			width: 100%;
+		}
 
-        ul {
-            width: 40%;
-        }
-    }
+		ul {
+			width: 40%;
+		}
+	}
 }

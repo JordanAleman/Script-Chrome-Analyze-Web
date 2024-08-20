@@ -8,14 +8,14 @@
 	</head>
 	<body>
 		<header class="header">
-			<h2>Skapa Style Rules Testing - Results</h2>
+			<h1>Skapa Style Rules Testing - Results</h1>
 			<div class="switch-container">
-				<h3 class="label labelTable">Table</h3>
+				<span class="label labelTable">Table</span>
 				<label for="switchInput" class="switch">
 					<input type="checkbox" id="switchInput" />''
 					<span class="slider round"></span>
 				</label>
-				<h3 class="label labelAccordion">Accordion</h3>
+				<span class="label labelAccordion">Accordion</span>
 			</div>
 		</header>
 		<main class="main">
@@ -46,19 +46,21 @@
 					<label for="selectorType">
 						Select a type of selector <br />and enter its value:
 					</label>
-					<select id="selectorType" class="selectorType">
-						<option value="id">ID</option>
-						<option value="class">Class</option>
-						<option value="name">Name</option>
-						<option value="tag">Tag</option>
-						<option value="custom">Custom</option>
-					</select>
-					<input
-						id="elementSelector"
-						class="inputAnalyze"
-						type="text"
-						placeholder="Enter selector"
-					/>
+					<div class="selectorTypeContent">
+						<select id="selectorType" class="selectorType">
+							<option value="id">ID</option>
+							<option value="class">Class</option>
+							<option value="name">Name</option>
+							<option value="tag">Tag</option>
+							<option value="custom">Custom</option>
+						</select>
+						<input
+							id="elementSelector"
+							class="inputAnalyze"
+							type="text"
+							placeholder="Enter selector"
+						/>
+					</div>
 					<button id="searchButton" class="buttonAnalyze">
 						Search Element
 					</button>
@@ -76,7 +78,12 @@
 					<div class="radioButtonContainer">
 						<label class="container">
 							bgColor
-							<input type="radio" value="bgColor" name="radio" checked="checked" />
+							<input
+								type="radio"
+								value="bgColor"
+								name="radio"
+								checked="checked"
+							/>
 							<span class="checkmark"></span>
 						</label>
 						<label class="container">
@@ -90,7 +97,7 @@
 							<span class="checkmark"></span>
 						</label>
 					</div>
-				
+
 					<h3>Accessibility</h3>
 					<div class="radioButtonContainer">
 						<label class="container">
@@ -105,12 +112,10 @@
 						</label>
 					</div>
 				</div>
-				
 
 				<hr />
 
-				<section id="resultsShow">
-				</section>
+				<section id="resultsShow"></section>
 			</div>
 
 			<div id="noResults">Element not found!</div>
