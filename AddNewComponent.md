@@ -17,49 +17,47 @@ Dentro del archivo del nuevo componente, escribe las funciones necesarias para r
 // Ejemplo para elementos de <a>
 
 export const processAElements = () => {
-    const anchors = document.querySelectorAll('a');
-    const results = [];
+	const anchors = document.querySelectorAll("a");
+	const results = [];
 
-    anchors.forEach(anchor => {
-        let href = anchor.href.trim();
-        const ariaLabel = anchor.getAttribute('aria-label');
-        const hasAriaLabel = ariaLabel && ariaLabel.length > 0;
+	anchors.forEach((anchor) => {
+		let href = anchor.href.trim();
+		const ariaLabel = anchor.getAttribute("aria-label");
+		const hasAriaLabel = ariaLabel && ariaLabel.length > 0;
 
-        // Eliminar la query string (línea completa después del '?')
-        const queryIndex = href.indexOf('?');
-        if (queryIndex !== -1) {
-            href = href.substring(0, queryIndex);
-        }
+		// Eliminar la query string (línea completa después del '?')
+		const queryIndex = href.indexOf("?");
+		if (queryIndex !== -1) {
+			href = href.substring(0, queryIndex);
+		}
 
-        // Controlar el tamaño de la URL
-        if (href.length >= 70) {
-            const lastSlashIndex = href.lastIndexOf('/');
-            if (lastSlashIndex !== -1 && lastSlashIndex < href.length - 1) {
-                const firstPart = href.slice(0, lastSlashIndex + 1);
-                const secondPart = href.slice(lastSlashIndex + 1);
-                href = `
+		// Controlar el tamaño de la URL
+		if (href.length >= 70) {
+			const lastSlashIndex = href.lastIndexOf("/");
+			if (lastSlashIndex !== -1 && lastSlashIndex < href.length - 1) {
+				const firstPart = href.slice(0, lastSlashIndex + 1);
+				const secondPart = href.slice(lastSlashIndex + 1);
+				href = `
                     <span>${firstPart}</span><br><span>${secondPart}</span>
                 `;
-            } else {
-                href = `
+			} else {
+				href = `
                     <span>${href}</span>
                 `;
-            }
-        } else {
-            href = `
+			}
+		} else {
+			href = `
                 <span>${href}</span>
             `;
-        }
+		}
 
+		results.push({
+			href,
+			ariaLabel: hasAriaLabel ? ariaLabel : "❌",
+		});
+	});
 
-
-        results.push({
-            href,
-            ariaLabel: hasAriaLabel ? ariaLabel : '❌'
-        });
-    });
-
-    return results;
+	return results;
 };
 
 // Siempre la misma estructura. Solo cambia algunas id
@@ -103,9 +101,9 @@ export const aArialStructure = () => {
 
 1.  Añade una nueva función para procesar los elementos que estás analizando en el nuevo componente.
 
-        ```javascript
-        const analyzePageAArials = () => processAArials();
-        ```
+    ```javascript
+    const analyzePageAArials = () => processAArials();
+    ```
 
 ### Integrar el Nuevo Componente en la Lógica
 
@@ -218,6 +216,11 @@ export const aArialStructure = () => {
     					};
 
     					toggleView();
+    					const analyzeContent =
+    						document.querySelector("#analyzeContent");
+
+    					if (analyzeContent.style.display != "none")
+    						analyzeContent.style.display = "none";
     				}
     			}
     		}

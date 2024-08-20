@@ -145,4 +145,4 @@ const updateTableAndSummary = (selectedValue, cachedResults) => {
             console.warn(`Unknown selection: ${selectedValue}`);
             break;
     }
-}
+};
