@@ -202,11 +202,17 @@ export const createAArialsTable = (aArials, tableBody) => {
     let withAriaLabel = 0;
     let withoutAriaLabel = 0;
 
+    let tableRowsHtml = '';
+
     aArials.forEach(a => {
         totalAArials++;
-        const row = tableBody.insertRow();
-        row.insertCell(0).textContent = a.href;
-        row.insertCell(1).textContent = a.ariaLabel;
+
+        tableRowsHtml += `
+            <tr>
+                <td>${a.href}</td>
+                <td>${a.ariaLabel}</td>
+            </tr>
+        `;
 
         if (a.ariaLabel !== '❌') {
             withAriaLabel++;
@@ -214,6 +220,8 @@ export const createAArialsTable = (aArials, tableBody) => {
             withoutAriaLabel++;
         }
     });
+
+    tableBody.innerHTML = tableRowsHtml;
 
     return { totalAArials, withAriaLabel, withoutAriaLabel };
 };

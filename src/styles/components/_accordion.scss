@@ -50,3 +50,18 @@
 #anchorAriaLabelsAccordion {
     grid-column: span 2;
 }
+
+#fontSizesAccordion {
+    .panel {
+        display: flex;
+        flex-wrap: wrap;
+
+        .summary {
+            width: 100%;
+        }
+
+        ul {
+            width: 40%;
+        }
+    }
+}

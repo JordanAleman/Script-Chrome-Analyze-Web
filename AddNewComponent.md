@@ -14,14 +14,44 @@ Este documento describe paso a paso cómo añadir un nuevo componente de anális
 Dentro del archivo del nuevo componente, escribe las funciones necesarias para realizar el análisis. Utiliza como referencia otros componentes existentes como `imageAlt.js`.
 
 ```javascript
-export const processAArials = () => {
+// Ejemplo para elementos de <a>
+
+export const processAElements = () => {
     const anchors = document.querySelectorAll('a');
     const results = [];
 
     anchors.forEach(anchor => {
-        const href = anchor.href;
+        let href = anchor.href.trim();
         const ariaLabel = anchor.getAttribute('aria-label');
-        const hasAriaLabel = ariaLabel && ariaLabel.trim().length > 0;
+        const hasAriaLabel = ariaLabel && ariaLabel.length > 0;
+
+        // Eliminar la query string (línea completa después del '?')
+        const queryIndex = href.indexOf('?');
+        if (queryIndex !== -1) {
+            href = href.substring(0, queryIndex);
+        }
+
+        // Controlar el tamaño de la URL
+        if (href.length >= 70) {
+            const lastSlashIndex = href.lastIndexOf('/');
+            if (lastSlashIndex !== -1 && lastSlashIndex < href.length - 1) {
+                const firstPart = href.slice(0, lastSlashIndex + 1);
+                const secondPart = href.slice(lastSlashIndex + 1);
+                href = `
+                    <span>${firstPart}</span><br><span>${secondPart}</span>
+                `;
+            } else {
+                href = `
+                    <span>${href}</span>
+                `;
+            }
+        } else {
+            href = `
+                <span>${href}</span>
+            `;
+        }
+
+
 
         results.push({
             href,
@@ -32,9 +62,10 @@ export const processAArials = () => {
     return results;
 };
 
+// Siempre la misma estructura. Solo cambia algunas id
 export const aArialStructure = () => {
-    let resultsShow = document.querySelector('#resultsShow');
-    resultsShow.innerHTML = `
+	let resultsShow = document.querySelector("#resultsShow");
+	resultsShow.innerHTML = `
         <div id="aArialSection" class="resultsContainer">
             <div class="containerResult">
                 <h2>Anchor Aria Labels</h2>
@@ -53,7 +84,7 @@ export const aArialStructure = () => {
             </div>
         </div>
     `;
-    return document.getElementById("resultAArials");
+	return document.getElementById("resultAArials");
 };
 ```
 
@@ -65,12 +96,12 @@ export const aArialStructure = () => {
 2. Importa la función de análisis desde el nuevo componente.
 
     ```javascript
-    import { processAArials } from './components/Accessibility/aArial.js';
+    import { processAArials } from "./components/Accessibility/aArial.js";
     ```
 
 ### Añadir la Función de Análisis
 
-1. Añade una nueva función para procesar los elementos que estás analizando en el nuevo componente.
+1.  Añade una nueva función para procesar los elementos que estás analizando en el nuevo componente.
 
         ```javascript
         const analyzePageAArials = () => processAArials();
@@ -82,17 +113,19 @@ export const aArialStructure = () => {
 
     ```javascript
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message.action === "analyzePage") {
-            const styleResults = analyzePageStyles(document.querySelectorAll('*'));
-            const imageAltResults = analyzePageImagesAlt();
-            const aArialsResults = analyzePageAArials(); // Añadir esta línea
-            sendResponse({
-                ...styleResults,
-                imageAlt: imageAltResults,
-                aArials: aArialsResults // Añadir esta línea
-            });
-        }
-        // Otros casos similares...
+    	if (message.action === "analyzePage") {
+    		const styleResults = analyzePageStyles(
+    			document.querySelectorAll("*")
+    		);
+    		const imageAltResults = analyzePageImagesAlt();
+    		const aArialsResults = analyzePageAArials(); // Añadir esta línea
+    		sendResponse({
+    			...styleResults,
+    			imageAlt: imageAltResults,
+    			aArials: aArialsResults, // Añadir esta línea
+    		});
+    	}
+    	// Otros casos similares...
     });
     ```
 
@@ -104,7 +137,7 @@ export const aArialStructure = () => {
 2. Importa la estructura de tu nuevo componente:
 
     ```javascript
-    import { aArialStructure } from '../components/Accessibility/aArial.js';
+    import { aArialStructure } from "../components/Accessibility/aArial.js";
     ```
 
 ### Actualizar la Función `toggleView`
@@ -113,31 +146,34 @@ export const aArialStructure = () => {
 
     ```javascript
     const toggleView = () => {
-        const analyzeContent = document.querySelector('#analyzeContent');
+    	const analyzeContent = document.querySelector("#analyzeContent");
 
-        if (analyzeContent.style.display !== 'none') analyzeContent.style.display = 'none';
+    	if (analyzeContent.style.display !== "none")
+    		analyzeContent.style.display = "none";
 
-        const selectedRadio = document.querySelector('.resultsChooseShow input[type="radio"]:checked');
-        if (!selectedRadio) return;
+    	const selectedRadio = document.querySelector(
+    		'.resultsChooseShow input[type="radio"]:checked'
+    	);
+    	if (!selectedRadio) return;
 
-        const selectedValue = selectedRadio.parentElement.textContent.trim();
-        const isAccordionView = toggleViewButton.checked;
+    	const selectedValue = selectedRadio.parentElement.textContent.trim();
+    	const isAccordionView = toggleViewButton.checked;
 
-        if (cachedResults) {
-            if (isAccordionView) {
-                accordionCreators.createAccordionContent(
-                    ['Background Colors', cachedResults.bgColors],
-                    ['Text Colors', cachedResults.textColors],
-                    ['Font Sizes', cachedResults.fontSizes],
-                    ['Image Alt', cachedResults.imageAlt],
-                    ['Anchor Aria Labels', cachedResults.aArials] // Añadido aquí
-                );
-            } else {
-                updateTableAndSummary(selectedValue, cachedResults);
-            }
+    	if (cachedResults) {
+    		if (isAccordionView) {
+    			accordionCreators.createAccordionContent(
+    				["Background Colors", cachedResults.bgColors],
+    				["Text Colors", cachedResults.textColors],
+    				["Font Sizes", cachedResults.fontSizes],
+    				["Image Alt", cachedResults.imageAlt],
+    				["Anchor Aria Labels", cachedResults.aArials] // Añadido aquí
+    			);
+    		} else {
+    			updateTableAndSummary(selectedValue, cachedResults);
+    		}
 
-            uiUpdater.showResults();
-        }
+    		uiUpdater.showResults();
+    	}
     };
     ```
 
@@ -146,24 +182,46 @@ export const aArialStructure = () => {
 1. Actualizar la Función `updatePopup`
 
     ```javascript
-    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-        chrome.tabs.sendMessage(tabs[0].id, { action, selector }, response => {
-            if (chrome.runtime.lastError) {
-                console.error('Error al recibir respuesta (っ °Д °;)っ:', chrome.runtime.lastError.message);
-            } else if (response) {
-                // Creamos el nuevo elemento "aArials"
-                const { bgColors, textColors, fontSizes, imageAlt, aArials, elementFound } = response;
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    	chrome.tabs.sendMessage(
+    		tabs[0].id,
+    		{ action, selector },
+    		(response) => {
+    			if (chrome.runtime.lastError) {
+    				console.error(
+    					"Error al recibir respuesta (っ °Д °;)っ:",
+    					chrome.runtime.lastError.message
+    				);
+    			} else if (response) {
+    				// Creamos el nuevo elemento "aArials"
+    				const {
+    					bgColors,
+    					textColors,
+    					fontSizes,
+    					imageAlt,
+    					aArials,
+    					elementFound,
+    				} = response;
 
-                if (elementFound === false) {
-                    uiUpdater.showNoResultsMessage(`Element "${selector}" not found!`);
-                } else {
-                    // Guardar resultados en caché
-                    cachedResults = { bgColors, textColors, fontSizes, imageAlt, aArials };
+    				if (elementFound === false) {
+    					uiUpdater.showNoResultsMessage(
+    						`Element "${selector}" not found!`
+    					);
+    				} else {
+    					// Guardar resultados en caché
+    					cachedResults = {
+    						bgColors,
+    						textColors,
+    						fontSizes,
+    						imageAlt,
+    						aArials,
+    					};
 
-                    toggleView();
-                }
-            }
-        });
+    					toggleView();
+    				}
+    			}
+    		}
+    	);
     });
     ```
 
@@ -171,45 +229,85 @@ export const aArialStructure = () => {
 
     ```javascript
     const updateTableAndSummary = (selectedValue, cachedResults) => {
-        let tableBody;
-        let counts;
+    	let tableBody;
+    	let counts;
 
-        switch (selectedValue) {
-            case 'bgColor':
-                tableBody = bgColorStructure();
-                counts = tableCreators.createColorRows(cachedResults.bgColors, tableBody);
-                updateSummary("backgroundColorSection", counts.totalCount, counts.matchedCount, counts.unmatchedCount);
-                break;
+    	switch (selectedValue) {
+    		case "bgColor":
+    			tableBody = bgColorStructure();
+    			counts = tableCreators.createColorRows(
+    				cachedResults.bgColors,
+    				tableBody
+    			);
+    			updateSummary(
+    				"backgroundColorSection",
+    				counts.totalCount,
+    				counts.matchedCount,
+    				counts.unmatchedCount
+    			);
+    			break;
 
-            case 'color':
-                tableBody = colorStructure();
-                counts = tableCreators.createColorRows(cachedResults.textColors, tableBody);
-                updateSummary("textColorSection", counts.totalCount, counts.matchedCount, counts.unmatchedCount);
-                break;
+    		case "color":
+    			tableBody = colorStructure();
+    			counts = tableCreators.createColorRows(
+    				cachedResults.textColors,
+    				tableBody
+    			);
+    			updateSummary(
+    				"textColorSection",
+    				counts.totalCount,
+    				counts.matchedCount,
+    				counts.unmatchedCount
+    			);
+    			break;
 
-            case 'fontSize':
-                tableBody = fontSizeStructure();
-                counts = tableCreators.createTableSizes(cachedResults.fontSizes, tableBody);
-                updateSummary("fontSizeSection", counts.totalCount, counts.matchedCount, counts.unmatchedCount);
-                break;
+    		case "fontSize":
+    			tableBody = fontSizeStructure();
+    			counts = tableCreators.createTableSizes(
+    				cachedResults.fontSizes,
+    				tableBody
+    			);
+    			updateSummary(
+    				"fontSizeSection",
+    				counts.totalCount,
+    				counts.matchedCount,
+    				counts.unmatchedCount
+    			);
+    			break;
 
-            case 'imageAlt':
-                tableBody = imageAltStructure();
-                counts = tableCreators.createImageAltTable(cachedResults.imageAlt, tableBody);
-                updateImageSummary("imageAltSection", counts.totalImages, counts.imagesWithAlt, counts.imagesWithoutAlt);
-                break;
+    		case "imageAlt":
+    			tableBody = imageAltStructure();
+    			counts = tableCreators.createImageAltTable(
+    				cachedResults.imageAlt,
+    				tableBody
+    			);
+    			updateImageSummary(
+    				"imageAltSection",
+    				counts.totalImages,
+    				counts.imagesWithAlt,
+    				counts.imagesWithoutAlt
+    			);
+    			break;
 
-            case 'aArial': // Añadido aquí
-                tableBody = aArialStructure();
-                counts = tableCreators.createAArialsTable(cachedResults.aArials, tableBody);
-                updateImageSummary("aArialSection", counts.totalAArials, counts.withAriaLabel, counts.withoutAriaLabel);
-                break;
+    		case "aArial": // Añadido aquí
+    			tableBody = aArialStructure();
+    			counts = tableCreators.createAArialsTable(
+    				cachedResults.aArials,
+    				tableBody
+    			);
+    			updateImageSummary(
+    				"aArialSection",
+    				counts.totalAArials,
+    				counts.withAriaLabel,
+    				counts.withoutAriaLabel
+    			);
+    			break;
 
-            default:
-                console.warn(`Unknown selection: ${selectedValue}`);
-                break;
-        }
-    }
+    		default:
+    			console.warn(`Unknown selection: ${selectedValue}`);
+    			break;
+    	}
+    };
     ```
 
 ## Paso 4: Modificar `accordionCreators.js`
@@ -222,19 +320,19 @@ export const aArialStructure = () => {
 
     ```javascript
     const processingFunctions = {
-        'Background Colors': dataProcessing.processColorItem,
-        'Text Colors': dataProcessing.processColorItem,
-        'Font Sizes': dataProcessing.processFontSizeItem,
-        'Image Alt': dataProcessing.processImageItem,
-        'Anchor Aria Labels': dataProcessing.processAArialItem // Añadido aquí
+    	"Background Colors": dataProcessing.processColorItem,
+    	"Text Colors": dataProcessing.processColorItem,
+    	"Font Sizes": dataProcessing.processFontSizeItem,
+    	"Image Alt": dataProcessing.processImageItem,
+    	"Anchor Aria Labels": dataProcessing.processAArialItem, // Añadido aquí
     };
 
     const verificationFunctions = {
-        'Background Colors': dataProcessing.isColorMatched,
-        'Text Colors': dataProcessing.isColorMatched,
-        'Font Sizes': dataProcessing.isFontSizeMatched,
-        'Image Alt': dataProcessing.isImageMatched,
-        'Anchor Aria Labels': dataProcessing.isAArialMatched // Añadido aquí
+    	"Background Colors": dataProcessing.isColorMatched,
+    	"Text Colors": dataProcessing.isColorMatched,
+    	"Font Sizes": dataProcessing.isFontSizeMatched,
+    	"Image Alt": dataProcessing.isImageMatched,
+    	"Anchor Aria Labels": dataProcessing.isAArialMatched, // Añadido aquí
     };
     ```
 
@@ -252,35 +350,31 @@ export const aArialStructure = () => {
     /* -------------------------------------------------------------------------- */
 
     /**
-    * Procesa un elemento de etiqueta aria para verificar si la etiqueta aria es válida
-    * y formatea la salida con el href y ariaLabel o un símbolo de error.
-    *
-    * @param {Object} item - El objeto con propiedades `href` y `ariaLabel`.
-    * @returns {Object} - Un objeto que contiene el item procesado y un indicador de si hay coincidencia.
-    */
+     * Procesa un elemento de etiqueta aria para verificar si la etiqueta aria es válida
+     * y formatea la salida con el href y ariaLabel o un símbolo de error.
+     *
+     * @param {Object} item - El objeto con propiedades `href` y `ariaLabel`.
+     * @returns {Object} - Un objeto que contiene el item procesado y un indicador de si hay coincidencia.
+     */
     export const processAArialItem = (item) => {
-        let isMatched = item.ariaLabel !== '❌';
-        let processedItem =
-            isMatched
-                ? `<strong>Href:</strong> ${item.href} <br><strong>Aria Label:</strong> ${item.ariaLabel}`
-                : `${item.href} | ${item.ariaLabel}`;
+    	let isMatched = item.ariaLabel !== "❌";
+    	let processedItem = isMatched
+    		? `<strong>Href:</strong> ${item.href} <br><strong>Aria Label:</strong> ${item.ariaLabel}`
+    		: `${item.href} | ${item.ariaLabel}`;
 
-        return { processedItem, isMatched };
+    	return { processedItem, isMatched };
     };
 
     /**
-    * Verifica si la etiqueta aria de un elemento es válida.
-    *
-    * @param {Object} item - El objeto con una propiedad `ariaLabel`.
-    * @returns {boolean} - True si la etiqueta aria no es el símbolo de error, de lo contrario, false.
-    */
-    export const isAArialMatched = (item) => item.ariaLabel !== '❌';
+     * Verifica si la etiqueta aria de un elemento es válida.
+     *
+     * @param {Object} item - El objeto con una propiedad `ariaLabel`.
+     * @returns {boolean} - True si la etiqueta aria no es el símbolo de error, de lo contrario, false.
+     */
+    export const isAArialMatched = (item) => item.ariaLabel !== "❌";
 
     /* ------------------------------- Fin aArial ------------------------------- */
     ```
-
-
-
 
 ## Paso 6: Modificar `tableCreators.js` (si es necesario)
 
@@ -291,26 +385,32 @@ export const aArialStructure = () => {
 
     ```javascript
     export const createAArialsTable = (aArials, tableBody) => {
-        let totalAArials = aArials.length;
-        let withAriaLabel = 0;
-        let withoutAriaLabel = 0;
+    	let totalAArials = 0;
+    	let withAriaLabel = 0;
+    	let withoutAriaLabel = 0;
 
-        aArials.forEach(aArial => {
-            const row = document.createElement('tr');
-            const ariaLabel = aArial.ariaLabel;
+    	let tableRowsHtml = "";
 
-            row.innerHTML = `
-                <td>${aArial.href}</td>
-                <td>${ariaLabel}</td>
+    	aArials.forEach((a) => {
+    		totalAArials++;
+
+    		tableRowsHtml += `
+                <tr>
+                    <td>${a.href}</td>
+                    <td>${a.ariaLabel}</td>
+                </tr>
             `;
-            
-            if (ariaLabel !== '❌') withAriaLabel++;
-            else withoutAriaLabel++;
 
-            tableBody.appendChild(row);
-        });
+    		if (a.ariaLabel !== "❌") {
+    			withAriaLabel++;
+    		} else {
+    			withoutAriaLabel++;
+    		}
+    	});
 
-        return { totalAArials, withAriaLabel, withoutAriaLabel };
+    	tableBody.innerHTML = tableRowsHtml;
+
+    	return { totalAArials, withAriaLabel, withoutAriaLabel };
     };
     ```
 
@@ -323,39 +423,45 @@ export const aArialStructure = () => {
 
     ```html
     <div class="resultsChooseShow">
-        <h2>Choose to show</h2>
-        <h3>Styles</h3>
-        <div class="radioButtonContainer">
-            <label class="container">
-                bgColor
-                <input type="radio" value="bgColor" name="radio" checked="checked" />
-                <span class="checkmark"></span>
-            </label>
-            <label class="container">
-                color
-                <input type="radio" value="color" name="radio" />
-                <span class="checkmark"></span>
-            </label>
-            <label class="container">
-                fontSize
-                <input type="radio" value="fontSize" name="radio" />
-                <span class="checkmark"></span>
-            </label>
-        </div>
-    
-        <h3>Accessibility</h3>
-        <div class="radioButtonContainer">
-            <label class="container">
-                imageAlt
-                <input type="radio" value="imageAlt" name="radio" />
-                <span class="checkmark"></span>
-            </label>
-            <label class="container"> <!-- Nuevo input radio -->
-                aArial
-                <input type="radio" value="aArial" name="radio" />
-                <span class="checkmark"></span>
-            </label>
-        </div>
+    	<h2>Choose to show</h2>
+    	<h3>Styles</h3>
+    	<div class="radioButtonContainer">
+    		<label class="container">
+    			bgColor
+    			<input
+    				type="radio"
+    				value="bgColor"
+    				name="radio"
+    				checked="checked"
+    			/>
+    			<span class="checkmark"></span>
+    		</label>
+    		<label class="container">
+    			color
+    			<input type="radio" value="color" name="radio" />
+    			<span class="checkmark"></span>
+    		</label>
+    		<label class="container">
+    			fontSize
+    			<input type="radio" value="fontSize" name="radio" />
+    			<span class="checkmark"></span>
+    		</label>
+    	</div>
+
+    	<h3>Accessibility</h3>
+    	<div class="radioButtonContainer">
+    		<label class="container">
+    			imageAlt
+    			<input type="radio" value="imageAlt" name="radio" />
+    			<span class="checkmark"></span>
+    		</label>
+    		<label class="container">
+    			<!-- Nuevo input radio -->
+    			aArial
+    			<input type="radio" value="aArial" name="radio" />
+    			<span class="checkmark"></span>
+    		</label>
+    	</div>
     </div>
     ```
 

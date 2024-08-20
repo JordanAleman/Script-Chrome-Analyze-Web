@@ -9,9 +9,37 @@ export const processAElements = () => {
     const results = [];
 
     anchors.forEach(anchor => {
-        const href = anchor.href.trim();
+        let href = anchor.href.trim();
         const ariaLabel = anchor.getAttribute('aria-label');
         const hasAriaLabel = ariaLabel && ariaLabel.length > 0;
+
+        // Eliminar la query string (línea completa después del '?')
+        const queryIndex = href.indexOf('?');
+        if (queryIndex !== -1) {
+            href = href.substring(0, queryIndex);
+        }
+
+        // Controlar el tamaño de la URL
+        if (href.length >= 70) {
+            const lastSlashIndex = href.lastIndexOf('/');
+            if (lastSlashIndex !== -1 && lastSlashIndex < href.length - 1) {
+                const firstPart = href.slice(0, lastSlashIndex + 1);
+                const secondPart = href.slice(lastSlashIndex + 1);
+                href = `
+                    <span>${firstPart}</span><br><span>${secondPart}</span>
+                `;
+            } else {
+                href = `
+                    <span>${href}</span>
+                `;
+            }
+        } else {
+            href = `
+                <span>${href}</span>
+            `;
+        }
+
+
 
         results.push({
             href,
